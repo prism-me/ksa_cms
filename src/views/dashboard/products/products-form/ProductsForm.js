@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardBody, FormGroup, Button, Label, CustomInput, Input, Col } from "reactstrap";
-
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardBody,
+  FormGroup,
+  Button,
+  Label,
+  CustomInput,
+  Input,
+  Col,
+} from "reactstrap";
 import Grid from "@material-ui/core/Grid";
 import MaterialButton from "@material-ui/core/Button";
 import { API } from "../../../../http/API";
-// import { API } from "../../";
 import { DragHandleOutlined } from "@material-ui/icons";
 import { Paper } from "@material-ui/core";
 import MultiSelect from "react-select/creatable";
-// import CreatableSelect from 'react-select/creatable';
-
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import "./ProductsForm.scss";
@@ -124,6 +131,7 @@ const initialProducts = {
     short_description: "",
     long_description: "",
     features: "",
+    firstcry_arabic_link: "",
     tags: [],
     arabic_tags: [],
     meta_details: {
@@ -168,7 +176,6 @@ const ProductsForm = (props) => {
   const [veriationIndex, setVeriationIndex] = useState(0);
   const [arabicVeriationIndex, setArabicVeriationIndex] = useState(0);
 
-
   //!----------------------------------Edit------------------------
   const { id } = useParams();
   const [isEdit, setIsEdit] = useState(false);
@@ -195,7 +202,6 @@ const ProductsForm = (props) => {
   // ]);
 
   useEffect(() => {
-
     if (id && id !== "") {
       setIsEdit(true);
       API.get(`/products/${id}`)
@@ -220,12 +226,17 @@ const ProductsForm = (props) => {
               productData.arabic.meta_details.schema_markup =
                 initialProducts.arabic.meta_details.schema_markup;
             }
-            if (productData.single_default_images?.length > 0) {
+            if (productData?.single_default_images?.length > 0) {
               productData.images_list = productData.single_default_images?.map(
                 (x) => x
               );
-              if(productData.is_new != 1 && productData.arabic.images_list.length < 1){
-                productData.arabic.images_list = JSON.parse(JSON.stringify(productData.single_default_images))
+              if (
+                productData.is_new != 1 &&
+                productData?.arabic.images_list?.length < 1
+              ) {
+                productData.arabic.images_list = JSON.parse(
+                  JSON.stringify(productData.single_default_images)
+                );
               }
             }
             if (
@@ -255,7 +266,7 @@ const ProductsForm = (props) => {
                   return {
                     image: x.image,
                     is_default: x.is_default || false,
-                    variation : x.variation
+                    variation: x.variation,
                   };
                 }
               );
@@ -292,53 +303,54 @@ const ProductsForm = (props) => {
               );
             }
 
-            if(!productData.is_new && productData.variations?.length > 0){
-                if(!productData.arabic.variations){
-                  let a = productData.arabic
-                  a.variations = []
-                  productData.arabic = a
-                }
+            if (!productData.is_new && productData.variations?.length > 0) {
+              if (!productData.arabic.variations) {
+                let a = productData.arabic;
+                a.variations = [];
+                productData.arabic = a;
+              }
 
-              productData.is_new = 1
+              productData.is_new = 1;
 
-              let oldProductVariation = productData.variations
+              let oldProductVariation = productData.variations;
               productData.variation_images.forEach((element) => {
                 oldProductVariation.forEach((element2, index2, array) => {
-                  if(element2.name == element.variation){
-                        let obj = {
-                          image : element.image,
-                          is_default : element.is_default
-                        }
-                        if(array[index2].variation_images){
-                          let imgs = array[index2].variation_images
-                          imgs.push(obj)
-                          array[index2].variation_images = imgs
-                        } else {
-                          let imgs = []
-                          imgs.push(obj)
-                          array[index2].variation_images = imgs
-                        }
+                  if (element2.name == element.variation) {
+                    let obj = {
+                      image: element.image,
+                      is_default: element.is_default,
+                    };
+                    if (array[index2].variation_images) {
+                      let imgs = array[index2].variation_images;
+                      imgs.push(obj);
+                      array[index2].variation_images = imgs;
+                    } else {
+                      let imgs = [];
+                      imgs.push(obj);
+                      array[index2].variation_images = imgs;
                     }
-                })
-
-              })
+                  }
+                });
+              });
 
               productData.variations.forEach((element, index, array) => {
                 // console.log("===element 11===")
                 // console.log(element.variation_images)
-                if(element.arabic_name || element.arabic_sortings){
+                if (element.arabic_name || element.arabic_sortings) {
                   productData.arabic.variations.push({
                     arabic_name: element.arabic_name ? element.arabic_name : "",
                     arabic_code: "",
                     arabic_variation_price: "",
                     arabic_variation_stock: "",
-                    arabic_link:"",
-                    arabic_sortings: element.arabic_sortings ? element.arabic_sortings : [],
-                    variation_images: element.variation_images
-                    });
+                    arabic_link: "",
+                    arabic_sortings: element.arabic_sortings
+                      ? element.arabic_sortings
+                      : [],
+                    variation_images: element.variation_images,
+                  });
                 }
-            });
-            console.log(productData.arabic.variations)
+              });
+              console.log(productData.arabic.variations);
             }
             setProducts(productData);
           }
@@ -426,23 +438,26 @@ const ProductsForm = (props) => {
   }, []);
 
   useEffect(() => {
-    if(refresh != 0){
+    if (refresh != 0) {
     }
   }, [refresh]);
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   //!--Select Image From Gallery
 
   const handleImageSelect = (e, index) => {
-
     if (e.target.checked) {
       if (isSingle && !isBanner) {
         setProducts({
@@ -463,69 +478,77 @@ const ProductsForm = (props) => {
           setModalShow(false);
         }, 500);
       } else {
-        console.log(isArabicSingle)
-        if(isArabicSingle){
-          console.log("476")
-          if(!products.arabic.variations){
-            products.arabic.variations = []
+        console.log(isArabicSingle);
+        if (isArabicSingle) {
+          console.log("476");
+          if (!products.arabic.variations) {
+            products.arabic.variations = [];
           }
-          if(products?.arabic?.variations?.length < 1){
-            console.log("478")
-            let selectedProduct = {...products }
-            if(!selectedProduct.arabic.images_list){
-              selectedProduct.arabic.images_list = []
+          if (products?.arabic?.variations?.length < 1) {
+            console.log("478");
+            let selectedProduct = { ...products };
+            if (!selectedProduct.arabic.images_list) {
+              selectedProduct.arabic.images_list = [];
             }
-            console.log("485")
-            let img = { image: imagesData[index].avatar, is_default: false }
-            selectedProduct.arabic.images_list.push(img)
+            console.log("485");
+            let img = { image: imagesData[index].avatar, is_default: false };
+            selectedProduct.arabic.images_list.push(img);
             setProducts(selectedProduct);
-            console.log("products")
-            console.log(products.arabic.images_list)
+            console.log("products");
+            console.log(products.arabic.images_list);
           }
-        } else if(arabicVeriationIndex){
-          console.log("hhhhhhhheeeeeeeeeerrrr 494")
-            let arabicVarIndex = arabicVeriationIndex -1
-            let varProduct = { ...products };
-            let a = { "image" :  imagesData[index].avatar, "is_default" : false }
+        } else if (arabicVeriationIndex) {
+          console.log("hhhhhhhheeeeeeeeeerrrr 494");
+          let arabicVarIndex = arabicVeriationIndex - 1;
+          let varProduct = { ...products };
+          let a = { image: imagesData[index].avatar, is_default: false };
 
-            if(!varProduct.arabic.variations[arabicVarIndex].variation_images){
-              varProduct.arabic.variations[arabicVarIndex].variation_images = []
-            }
+          if (!varProduct.arabic.variations[arabicVarIndex].variation_images) {
+            varProduct.arabic.variations[arabicVarIndex].variation_images = [];
+          }
 
-            varProduct.arabic.variations[arabicVarIndex].variation_images.push(a)
-            setProducts(varProduct)
-            console.log(varProduct.arabic.variations)
-            // setProducts({
-            //   ...products,
-            //   images_list: [...products.images_list, imagesData[index].avatar],
-            //   variation_images: [
-            //     ...products.variation_images,
-            //     { image: imagesData[index].avatar, variation: "" },
-            //   ],
-            // });
+          varProduct.arabic.variations[arabicVarIndex].variation_images.push(a);
+          setProducts(varProduct);
+          console.log(varProduct.arabic.variations);
+          // setProducts({
+          //   ...products,
+          //   images_list: [...products.images_list, imagesData[index].avatar],
+          //   variation_images: [
+          //     ...products.variation_images,
+          //     { image: imagesData[index].avatar, variation: "" },
+          //   ],
+          // });
         } else {
-          console.log("ENG VAR IND")
-          setSelectedImages([...selectedImages, { image: imagesData[index].avatar, is_default: false }]);
+          console.log("ENG VAR IND");
+          setSelectedImages([
+            ...selectedImages,
+            { image: imagesData[index].avatar, is_default: false },
+          ]);
           if (products?.variations?.length < 1) {
-              console.log("505")
-                setProducts({
-                  ...products,
-                  images_list: [...products.images_list, { image: imagesData[index].avatar, is_default: false } ],
-                  variation_images: [
-                    ...products.variation_images,
-                    { image: imagesData[index].avatar, variation: "" },
-                  ],
-                  single_default_images: [
-                    ...products.single_default_images,
-                    { image: imagesData[index].avatar, is_default: false },
-                  ],
-                });
-              // }
+            console.log("505");
+            setProducts({
+              ...products,
+              images_list: [
+                ...products.images_list,
+                { image: imagesData[index].avatar, is_default: false },
+              ],
+              variation_images: [
+                ...products.variation_images,
+                { image: imagesData[index].avatar, variation: "" },
+              ],
+              single_default_images: [
+                ...products.single_default_images,
+                { image: imagesData[index].avatar, is_default: false },
+              ],
+            });
+            // }
           } else {
             let variation_images = { ...products };
-            let a = { "image" :  imagesData[index].avatar, "is_default" : false }
-            variation_images.variations[veriationIndex].variation_images.push(a)
-            setProducts(variation_images)
+            let a = { image: imagesData[index].avatar, is_default: false };
+            variation_images.variations[veriationIndex].variation_images.push(
+              a
+            );
+            setProducts(variation_images);
             setProducts({
               ...products,
               images_list: [...products.images_list, imagesData[index].avatar],
@@ -547,12 +570,11 @@ const ProductsForm = (props) => {
           }
         });
         setImagesData(imagesDataUpdated);
-        }
-
+      }
 
       // }
     } else {
-      console.log("517")
+      console.log("517");
       if (isSingle && !isBanner) {
         setProducts({ ...products, thumbnail: "" });
         setThumbnailPreview("");
@@ -580,7 +602,6 @@ const ProductsForm = (props) => {
   };
 
   const handleContentImageSelect = (e, index) => {
-
     if (e.target.checked) {
       if (isOverview && !isFeatures) {
         setProducts({
@@ -652,14 +673,14 @@ const ProductsForm = (props) => {
 
   //! variation changes
   const handleVariationChange = (e, index) => {
-    console.log("handleVariationChange ::", e.target.value)
+    console.log("handleVariationChange ::", e.target.value);
     let updatedProducts = { ...products };
     updatedProducts.variations[index][e.target.name] = e.target.value;
     setProducts(updatedProducts);
   };
 
   const handleArabicVariationChange = (e, index) => {
-    console.log("handleArabicVariationChange ::", e.target.value)
+    console.log("handleArabicVariationChange ::", e.target.value);
     let updatedProducts = { ...products };
     updatedProducts.arabic.variations[index][e.target.name] = e.target.value;
     setProducts(updatedProducts);
@@ -680,9 +701,9 @@ const ProductsForm = (props) => {
   };
   const handleSingleDefaultChange = (e, index) => {
     let updatedProducts = { ...products };
-    console.log(index)
+    console.log(index);
     let updatedDefault = updatedProducts.images_list.map((x, ind) => {
-      if(ind == index){
+      if (ind == index) {
         return {
           image: x.image,
           is_default: true,
@@ -701,9 +722,9 @@ const ProductsForm = (props) => {
   };
   const handleSingleArabicDefaultChange = (e, index) => {
     let updatedProducts = { ...products };
-    console.log(index)
+    console.log(index);
     let updatedDefault = updatedProducts.arabic.images_list.map((x, ind) => {
-      if(ind == index){
+      if (ind == index) {
         return {
           image: x.image,
           is_default: true,
@@ -728,37 +749,37 @@ const ProductsForm = (props) => {
       code: "",
       variation_price: "",
       variation_stock: "",
-      link:"",
-      sortings:[],
-      arabic_sortings:[],
-      variation_images:[]
+      link: "",
+      sortings: [],
+      arabic_sortings: [],
+      variation_images: [],
     });
 
-    console.log("668 updatedProducts")
-    console.log(updatedProducts)
+    console.log("668 updatedProducts");
+    console.log(updatedProducts);
     setProducts(updatedProducts);
   };
 
   const addArabicVariation = () => {
     let updatedProducts = { ...products };
 
-    if(!updatedProducts.arabic.variations){
-      let a = updatedProducts.arabic
-      a.variations = []
-      updatedProducts.arabic = a
+    if (!updatedProducts.arabic.variations) {
+      let a = updatedProducts.arabic;
+      a.variations = [];
+      updatedProducts.arabic = a;
     }
 
     updatedProducts.arabic.variations.push({
-        arabic_name: "",
-        arabic_code: "",
-        arabic_variation_price: "",
-        arabic_variation_stock: "",
-        arabic_link:"",
-        arabic_sortings:[],
-        arabic_variation_images:[]
-        });
+      arabic_name: "",
+      arabic_code: "",
+      arabic_variation_price: "",
+      arabic_variation_stock: "",
+      arabic_link: "",
+      arabic_sortings: [],
+      arabic_variation_images: [],
+    });
 
-    console.log(updatedProducts)
+    console.log(updatedProducts);
     setProducts(updatedProducts);
   };
 
@@ -843,8 +864,8 @@ const ProductsForm = (props) => {
       return;
     }
     let submitProducts = { ...products };
-    console.log("======submitProducts")
-    console.log(submitProducts)
+    console.log("======submitProducts");
+    console.log(submitProducts);
     // return false;
 
     if (!submitProducts.variations?.length > 0) {
@@ -854,8 +875,8 @@ const ProductsForm = (props) => {
     if (isEdit) {
       let updateId = submitProducts.route;
 
-      if(submitProducts.single_default_images){
-        submitProducts.single_default_images = submitProducts.images_list
+      if (submitProducts.single_default_images) {
+        submitProducts.single_default_images = submitProducts.images_list;
       }
 
       delete submitProducts["_id"];
@@ -868,7 +889,7 @@ const ProductsForm = (props) => {
           console.log(err);
         });
     } else {
-      submitProducts = {...submitProducts, is_new : 1}
+      submitProducts = { ...submitProducts, is_new: 1 };
       API.post("/products", submitProducts)
         .then((response) => {
           alert("Product has been added successfully");
@@ -890,41 +911,53 @@ const ProductsForm = (props) => {
   };
 
   const removeProductVariation = (variationIndex, imageIndex) => {
-    let selectedProduct = { ...products }
-        selectedProduct.variations[variationIndex].variation_images = selectedProduct.variations[variationIndex].variation_images.filter(
-      (y, ind) => ind != imageIndex
-    )
+    let selectedProduct = { ...products };
+    selectedProduct.variations[variationIndex].variation_images =
+      selectedProduct.variations[variationIndex].variation_images.filter(
+        (y, ind) => ind != imageIndex
+      );
     setProducts(selectedProduct);
 
     return false;
-
-  }
+  };
 
   const removeArabicProductVariation = (variationIndex, imageIndex) => {
-    console.log("===variationIndex, imageIndex")
-    console.log(variationIndex, imageIndex)
-    let selectedProduct = { ...products }
+    console.log("===variationIndex, imageIndex");
+    console.log(variationIndex, imageIndex);
+    let selectedProduct = { ...products };
 
-    console.log("selectedProduct.arabic.variations[variationIndex].variation_images")
-    console.log(selectedProduct.arabic.variations[variationIndex].variation_images)
+    console.log(
+      "selectedProduct.arabic.variations[variationIndex].variation_images"
+    );
+    console.log(
+      selectedProduct.arabic.variations[variationIndex].variation_images
+    );
 
-      //   selectedProduct.arabic.variations[variationIndex].variation_images = selectedProduct.variations[variationIndex].variation_images.filter(
-      // (y, index) => index != imageIndex
-      // )
+    //   selectedProduct.arabic.variations[variationIndex].variation_images = selectedProduct.variations[variationIndex].variation_images.filter(
+    // (y, index) => index != imageIndex
+    // )
 
-    selectedProduct.arabic.variations[variationIndex].variation_images.splice(imageIndex,1)
+    selectedProduct.arabic.variations[variationIndex].variation_images.splice(
+      imageIndex,
+      1
+    );
     setProducts(selectedProduct);
 
-    console.log("selectedProduct.arabic.variations[variationIndex].variation_images")
-    console.log(selectedProduct.arabic.variations[variationIndex].variation_images)
-
-  }
+    console.log(
+      "selectedProduct.arabic.variations[variationIndex].variation_images"
+    );
+    console.log(
+      selectedProduct.arabic.variations[variationIndex].variation_images
+    );
+  };
 
   const handleDefaultChangeVariation = (variationIndex, imageIndex) => {
-    console.log("handleDefaultChangeVariation")
-    let selectedProduct = { ...products }
-        selectedProduct.variations[variationIndex].variation_images = selectedProduct.variations[variationIndex].variation_images.map((x, ind) => {
-          if(ind == imageIndex){
+    console.log("handleDefaultChangeVariation");
+    let selectedProduct = { ...products };
+    selectedProduct.variations[variationIndex].variation_images =
+      selectedProduct.variations[variationIndex].variation_images.map(
+        (x, ind) => {
+          if (ind == imageIndex) {
             return {
               image: x.image,
               is_default: true,
@@ -935,18 +968,20 @@ const ProductsForm = (props) => {
               is_default: false,
             };
           }
-        });
+        }
+      );
     setProducts(selectedProduct);
 
     return false;
-
-  }
+  };
 
   const handleDefaultChangeArabicVariation = (variationIndex, imageIndex) => {
-    console.log("handleDefaultChangeArabicVariation")
-    let selectedProduct = { ...products }
-        selectedProduct.arabic.variations[variationIndex].variation_images = selectedProduct.arabic.variations[variationIndex].variation_images.map((x, ind) => {
-          if(ind == imageIndex){
+    console.log("handleDefaultChangeArabicVariation");
+    let selectedProduct = { ...products };
+    selectedProduct.arabic.variations[variationIndex].variation_images =
+      selectedProduct.arabic.variations[variationIndex].variation_images.map(
+        (x, ind) => {
+          if (ind == imageIndex) {
             return {
               image: x.image,
               is_default: true,
@@ -957,182 +992,212 @@ const ProductsForm = (props) => {
               is_default: false,
             };
           }
-        });
+        }
+      );
     setProducts(selectedProduct);
 
     return false;
-
-  }
+  };
 
   const removeProduct = (index) => {
-          let selectedProduct = { ...products }
-          let productImages = selectedProduct.single_default_images
+    let selectedProduct = { ...products };
+    let productImages = selectedProduct.single_default_images;
 
-          productImages = productImages.filter(function( element, ind ) {
-            return ind !== index;
-         });
-         selectedProduct.single_default_images = productImages;
-         setProducts(selectedProduct);
-  }
+    productImages = productImages.filter(function (element, ind) {
+      return ind !== index;
+    });
+    selectedProduct.single_default_images = productImages;
+    setProducts(selectedProduct);
+  };
   const removeArabicProduct = (index) => {
-          let selectedProduct = { ...products }
-          let productImages = selectedProduct.arabic.images_list
+    let selectedProduct = { ...products };
+    let productImages = selectedProduct.arabic.images_list;
 
-          productImages = productImages.filter(function( element, ind ) {
-            return ind !== index;
-         });
-         selectedProduct.arabic.images_list = productImages;
-         setProducts(selectedProduct);
-  }
+    productImages = productImages.filter(function (element, ind) {
+      return ind !== index;
+    });
+    selectedProduct.arabic.images_list = productImages;
+    setProducts(selectedProduct);
+  };
 
   const handleDrop = (ev, objKey, ind = -1) => {
-      let dragDivId = dragId - 1;
-      let dropDivId = objKey - 1;
-      if(ind != -1){
-        let updatedVarientImages = { ...products }
-        if(dragDivId > dropDivId){
-          let temp_image = "";
-          let temp_image2 = "";
-          for (let i = dropDivId; i <= dragDivId; i++) {
-            if(i == dropDivId){
-              temp_image = updatedVarientImages.variations[ind].variation_images[dropDivId];
-              updatedVarientImages.variations[ind].variation_images[dropDivId] = updatedVarientImages.variations[ind].variation_images[dragDivId];
-            } else {
-              temp_image2 = updatedVarientImages.variations[ind].variation_images[i];
-              updatedVarientImages.variations[ind].variation_images[i] = temp_image;
-              temp_image = temp_image2
-            }
+    let dragDivId = dragId - 1;
+    let dropDivId = objKey - 1;
+    if (ind != -1) {
+      let updatedVarientImages = { ...products };
+      if (dragDivId > dropDivId) {
+        let temp_image = "";
+        let temp_image2 = "";
+        for (let i = dropDivId; i <= dragDivId; i++) {
+          if (i == dropDivId) {
+            temp_image =
+              updatedVarientImages.variations[ind].variation_images[dropDivId];
+            updatedVarientImages.variations[ind].variation_images[dropDivId] =
+              updatedVarientImages.variations[ind].variation_images[dragDivId];
+          } else {
+            temp_image2 =
+              updatedVarientImages.variations[ind].variation_images[i];
+            updatedVarientImages.variations[ind].variation_images[i] =
+              temp_image;
+            temp_image = temp_image2;
           }
         }
-
-        if(dragDivId < dropDivId){
-          let temp_image = "";
-          let temp_image2 = "";
-          for (let i = dropDivId; i >= dragDivId; i--) {
-            if(i == dropDivId){
-              temp_image = updatedVarientImages.variations[ind].variation_images[dropDivId];
-              updatedVarientImages.variations[ind].variation_images[dropDivId] = updatedVarientImages.variations[ind].variation_images[dragDivId];
-            } else {
-              temp_image2 = updatedVarientImages.variations[ind].variation_images[i];
-              updatedVarientImages.variations[ind].variation_images[i] = temp_image;
-              temp_image = temp_image2
-            }
-          }
-        }
-        setProducts(updatedVarientImages)
-      } else {
-        let updatedImages = selectedImages
-        if(dragDivId > dropDivId){
-          let temp_image = "";
-          let temp_image2 = "";
-          for (let i = dropDivId; i <= dragDivId; i++) {
-            if(i == dropDivId){
-              temp_image = updatedImages[dropDivId];
-              updatedImages[dropDivId] = updatedImages[dragDivId];
-            } else {
-              temp_image2 = updatedImages[i];
-              updatedImages[i] = temp_image;
-              temp_image = temp_image2
-            }
-          }
-        }
-
-        if(dragDivId < dropDivId){
-          let temp_image = "";
-          let temp_image2 = "";
-          for (let i = dropDivId; i >= dragDivId; i--) {
-            if(i == dropDivId){
-              temp_image = updatedImages[dropDivId];
-              updatedImages[dropDivId] = updatedImages[dragDivId];
-            } else {
-              temp_image2 = updatedImages[i];
-              updatedImages[i] = temp_image;
-              temp_image = temp_image2
-            }
-          }
-        }
-
-        setRefresh(refresh + 1)
-        setSelectedImages(updatedImages);
-        setProducts({
-          ...products,
-          images_list: selectedImages,single_default_images: selectedImages})
       }
 
-    };
+      if (dragDivId < dropDivId) {
+        let temp_image = "";
+        let temp_image2 = "";
+        for (let i = dropDivId; i >= dragDivId; i--) {
+          if (i == dropDivId) {
+            temp_image =
+              updatedVarientImages.variations[ind].variation_images[dropDivId];
+            updatedVarientImages.variations[ind].variation_images[dropDivId] =
+              updatedVarientImages.variations[ind].variation_images[dragDivId];
+          } else {
+            temp_image2 =
+              updatedVarientImages.variations[ind].variation_images[i];
+            updatedVarientImages.variations[ind].variation_images[i] =
+              temp_image;
+            temp_image = temp_image2;
+          }
+        }
+      }
+      setProducts(updatedVarientImages);
+    } else {
+      let updatedImages = selectedImages;
+      if (dragDivId > dropDivId) {
+        let temp_image = "";
+        let temp_image2 = "";
+        for (let i = dropDivId; i <= dragDivId; i++) {
+          if (i == dropDivId) {
+            temp_image = updatedImages[dropDivId];
+            updatedImages[dropDivId] = updatedImages[dragDivId];
+          } else {
+            temp_image2 = updatedImages[i];
+            updatedImages[i] = temp_image;
+            temp_image = temp_image2;
+          }
+        }
+      }
+
+      if (dragDivId < dropDivId) {
+        let temp_image = "";
+        let temp_image2 = "";
+        for (let i = dropDivId; i >= dragDivId; i--) {
+          if (i == dropDivId) {
+            temp_image = updatedImages[dropDivId];
+            updatedImages[dropDivId] = updatedImages[dragDivId];
+          } else {
+            temp_image2 = updatedImages[i];
+            updatedImages[i] = temp_image;
+            temp_image = temp_image2;
+          }
+        }
+      }
+
+      setRefresh(refresh + 1);
+      setSelectedImages(updatedImages);
+      setProducts({
+        ...products,
+        images_list: selectedImages,
+        single_default_images: selectedImages,
+      });
+    }
+  };
   const handleArabicDrop = (ev, objKey, ind = -1) => {
-      let dragDivId = arabicDragId - 1;
-      let dropDivId = objKey - 1;
-      if(ind != -1){
-        let updatedVarientImages = { ...products }
-        if(dragDivId > dropDivId){
-          let temp_image = "";
-          let temp_image2 = "";
-          for (let i = dropDivId; i <= dragDivId; i++) {
-            if(i == dropDivId){
-              temp_image = updatedVarientImages.arabic.variations[ind].variation_images[dropDivId];
-              updatedVarientImages.arabic.variations[ind].variation_images[dropDivId] = updatedVarientImages.arabic.variations[ind].variation_images[dragDivId];
-            } else {
-              temp_image2 = updatedVarientImages.arabic.variations[ind].variation_images[i];
-              updatedVarientImages.arabic.variations[ind].variation_images[i] = temp_image;
-              temp_image = temp_image2
-            }
+    let dragDivId = arabicDragId - 1;
+    let dropDivId = objKey - 1;
+    if (ind != -1) {
+      let updatedVarientImages = { ...products };
+      if (dragDivId > dropDivId) {
+        let temp_image = "";
+        let temp_image2 = "";
+        for (let i = dropDivId; i <= dragDivId; i++) {
+          if (i == dropDivId) {
+            temp_image =
+              updatedVarientImages.arabic.variations[ind].variation_images[
+                dropDivId
+              ];
+            updatedVarientImages.arabic.variations[ind].variation_images[
+              dropDivId
+            ] =
+              updatedVarientImages.arabic.variations[ind].variation_images[
+                dragDivId
+              ];
+          } else {
+            temp_image2 =
+              updatedVarientImages.arabic.variations[ind].variation_images[i];
+            updatedVarientImages.arabic.variations[ind].variation_images[i] =
+              temp_image;
+            temp_image = temp_image2;
           }
         }
-
-        if(dragDivId < dropDivId){
-          let temp_image = "";
-          let temp_image2 = "";
-          for (let i = dropDivId; i >= dragDivId; i--) {
-            if(i == dropDivId){
-              temp_image = updatedVarientImages.arabic.variations[ind].variation_images[dropDivId];
-              updatedVarientImages.arabic.variations[ind].variation_images[dropDivId] = updatedVarientImages.arabic.variations[ind].variation_images[dragDivId];
-            } else {
-              temp_image2 = updatedVarientImages.arabic.variations[ind].variation_images[i];
-              updatedVarientImages.arabic.variations[ind].variation_images[i] = temp_image;
-              temp_image = temp_image2
-            }
-          }
-        }
-        setProducts(updatedVarientImages)
-      } else {
-        let updatedImages = { ...products }
-        if(dragDivId > dropDivId){
-          let temp_image = "";
-          let temp_image2 = "";
-          for (let i = dropDivId; i <= dragDivId; i++) {
-            if(i == dropDivId){
-              temp_image = updatedImages.arabic.images_list[dropDivId];
-              updatedImages.arabic.images_list[dropDivId] = updatedImages.arabic.images_list[dragDivId];
-            } else {
-              temp_image2 = updatedImages.arabic.images_list[i];
-              updatedImages.arabic.images_list[i] = temp_image;
-              temp_image = temp_image2
-            }
-          }
-        }
-
-        if(dragDivId < dropDivId){
-          let temp_image = "";
-          let temp_image2 = "";
-          for (let i = dropDivId; i >= dragDivId; i--) {
-            if(i == dropDivId){
-              temp_image = updatedImages.arabic.images_list[dropDivId];
-              updatedImages.arabic.images_list[dropDivId] = updatedImages.arabic.images_list[dragDivId];
-            } else {
-              temp_image2 = updatedImages.arabic.images_list[i];
-              updatedImages.arabic.images_list[i] = temp_image;
-              temp_image = temp_image2
-            }
-          }
-        }
-
-        setRefresh(refresh + 1)
-        // setSelectedImages(updatedImages);
-        setProducts(updatedImages)
       }
 
-    };
+      if (dragDivId < dropDivId) {
+        let temp_image = "";
+        let temp_image2 = "";
+        for (let i = dropDivId; i >= dragDivId; i--) {
+          if (i == dropDivId) {
+            temp_image =
+              updatedVarientImages.arabic.variations[ind].variation_images[
+                dropDivId
+              ];
+            updatedVarientImages.arabic.variations[ind].variation_images[
+              dropDivId
+            ] =
+              updatedVarientImages.arabic.variations[ind].variation_images[
+                dragDivId
+              ];
+          } else {
+            temp_image2 =
+              updatedVarientImages.arabic.variations[ind].variation_images[i];
+            updatedVarientImages.arabic.variations[ind].variation_images[i] =
+              temp_image;
+            temp_image = temp_image2;
+          }
+        }
+      }
+      setProducts(updatedVarientImages);
+    } else {
+      let updatedImages = { ...products };
+      if (dragDivId > dropDivId) {
+        let temp_image = "";
+        let temp_image2 = "";
+        for (let i = dropDivId; i <= dragDivId; i++) {
+          if (i == dropDivId) {
+            temp_image = updatedImages.arabic.images_list[dropDivId];
+            updatedImages.arabic.images_list[dropDivId] =
+              updatedImages.arabic.images_list[dragDivId];
+          } else {
+            temp_image2 = updatedImages.arabic.images_list[i];
+            updatedImages.arabic.images_list[i] = temp_image;
+            temp_image = temp_image2;
+          }
+        }
+      }
+
+      if (dragDivId < dropDivId) {
+        let temp_image = "";
+        let temp_image2 = "";
+        for (let i = dropDivId; i >= dragDivId; i--) {
+          if (i == dropDivId) {
+            temp_image = updatedImages.arabic.images_list[dropDivId];
+            updatedImages.arabic.images_list[dropDivId] =
+              updatedImages.arabic.images_list[dragDivId];
+          } else {
+            temp_image2 = updatedImages.arabic.images_list[i];
+            updatedImages.arabic.images_list[i] = temp_image;
+            temp_image = temp_image2;
+          }
+        }
+      }
+
+      setRefresh(refresh + 1);
+      // setSelectedImages(updatedImages);
+      setProducts(updatedImages);
+    }
+  };
 
   return (
     <div
@@ -1158,7 +1223,7 @@ const ProductsForm = (props) => {
           >
             {({ errors, touched }) => (
               <Form>
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="">
                     <Label for="name">Name</Label>
                     <Field
@@ -1169,8 +1234,8 @@ const ProductsForm = (props) => {
                       className={`form-control`}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="">
                     <Label for="route">Route</Label>
                     <Field
@@ -1179,11 +1244,11 @@ const ProductsForm = (props) => {
                       onChange={handleInput}
                       value={products.route}
                       className={`form-control`}
-                      disabled={(isEdit) ? "disabled" : ""}
+                      disabled={isEdit ? "disabled" : ""}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="my-2">
                     <Label for="product_code">Product Code</Label>
                     <Field
@@ -1194,10 +1259,10 @@ const ProductsForm = (props) => {
                       className={`form-control`}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="my-2">
-                    <Label for="product_code">FirstCry Link</Label>
+                    <Label for="product_code">Nahdi Link</Label>
                     <Field
                       name="firstcry_link"
                       id="firstcry_link"
@@ -1206,8 +1271,8 @@ const ProductsForm = (props) => {
                       className={`form-control`}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="my-2">
                     <Label for="default_price">Price</Label>
                     <Field
@@ -1218,8 +1283,8 @@ const ProductsForm = (props) => {
                       className={`form-control`}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="my-2">
                     <Label for="default_stock">Stock</Label>
                     <Field
@@ -1230,8 +1295,8 @@ const ProductsForm = (props) => {
                       className={`form-control`}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="my-2">
                     <Label for="rating">Rating</Label>
                     <Field
@@ -1242,15 +1307,15 @@ const ProductsForm = (props) => {
                       className={`form-control`}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="mb-2">
                     <Label>Variations</Label>
                     <div className="clearfix mb-1" />
                     {products?.variations?.map((x, ind) => (
                       <div className="variation-row-wrapper mb-2">
                         <Row>
-                          <Col sm={4} style={{marginBottom : "10px"}}>
+                          <Col sm={4} style={{ marginBottom: "10px" }}>
                             <Field
                               name={`name`}
                               id={`variation_name_${ind}`}
@@ -1343,7 +1408,9 @@ const ProductsForm = (props) => {
                           {/* Images List */}
                           <Col sm={11}>
                             <FormGroup className="my-2">
-                              <Label for="images_list">English Variation Images</Label>
+                              <Label for="images_list">
+                                English Variation Images
+                              </Label>
                               <div className="clearfix" />
 
                               <Button.Ripple
@@ -1352,8 +1419,8 @@ const ProductsForm = (props) => {
                                   setIsSingle(false);
                                   setIsBanner(false);
                                   setModalShow(true);
-                                  setArabicVeriationIndex(0)
-                                  setVeriationIndex(ind)
+                                  setArabicVeriationIndex(0);
+                                  setVeriationIndex(ind);
                                   setIsArabicSingle(false);
                                 }}
                               >
@@ -1361,9 +1428,9 @@ const ProductsForm = (props) => {
                               </Button.Ripple>
                             </FormGroup>
                           </Col>
-                        <Col sm={11}>
-                          <Row style={{margin: "0px"}}>
-                            {/* {products.variations[ind].variation_images ?.map((x, index) => (
+                          <Col sm={11}>
+                            <Row style={{ margin: "0px" }}>
+                              {/* {products.variations[ind].variation_images ?.map((x, index) => (
                               <Col sm={3} key={index}>
                                 <div className="img-preview-wrapper preview-small">
                                   <RemoveCircleOutline
@@ -1423,126 +1490,140 @@ const ProductsForm = (props) => {
                               </Col>
                             ))} */}
 
-                          <Grid container spacing={2}>
-                            {/* <Grid item xs={12}></Grid> */}
-                            <Grid item sm={12}>
-                              <Grid container spacing={1}>
-                                {products.variations[ind].variation_images
-                                  ?.sort((a, b) => a.order - b.order)
-                                  .map((x, index) => (
-                                    <React.Fragment>
-                                      <Grid item xs={3} sm={3}>
-                                        <Paper
-                                          className="px-2 py-3 header-menu-list-item"
-                                          key={index + 1}
-                                          id={index + 1}
-                                          draggable
-                                          onDragStart={handleDrag}
-                                          onDrop={(ev) => handleDrop(ev, index + 1, ind)}
-                                          onDragOver={(ev) => ev.preventDefault()}
-                                          style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            height: "150px",
-                                          }}
-                                        >
-
-                                          <Grid container spacing={1}>
-                                            <Grid
-                                              item
-                                              xs={12}
-                                              sm={2}
+                              <Grid container spacing={2}>
+                                {/* <Grid item xs={12}></Grid> */}
+                                <Grid item sm={12}>
+                                  <Grid container spacing={1}>
+                                    {products.variations[ind].variation_images
+                                      ?.sort((a, b) => a.order - b.order)
+                                      .map((x, index) => (
+                                        <React.Fragment>
+                                          <Grid item xs={3} sm={3}>
+                                            <Paper
+                                              className="px-2 py-3 header-menu-list-item"
+                                              key={index + 1}
+                                              id={index + 1}
+                                              draggable
+                                              onDragStart={handleDrag}
+                                              onDrop={(ev) =>
+                                                handleDrop(ev, index + 1, ind)
+                                              }
+                                              onDragOver={(ev) =>
+                                                ev.preventDefault()
+                                              }
                                               style={{
                                                 display: "flex",
                                                 alignItems: "center",
+                                                height: "150px",
                                               }}
                                             >
-                                              <DragHandleOutlined
-                                                style={{ cursor: "grab" }}
-                                                color="disabled"
-                                              />
-                                            </Grid>
-
-                                            <Grid item xs={12} sm={10}>
-                                              <div
-                                                style={{
-                                                  width: "100%",
-                                                  height: "120px",
-                                                }}
-                                              >
-                                                <img
-                                                  src={x.image}
-                                                  alt=""
+                                              <Grid container spacing={1}>
+                                                <Grid
+                                                  item
+                                                  xs={12}
+                                                  sm={2}
                                                   style={{
-                                                    width: "100%",
-                                                    height: "100%",
-                                                    objectFit: "contain",
+                                                    display: "flex",
+                                                    alignItems: "center",
                                                   }}
-                                                />
-
-                                              </div>
-                                              <FormGroup
-                                    check
-                                    style={
-                                      {
-                                        // height: "100%",
-                                        // display: "flex",
-                                        // // flexDirection: "column",
-                                        // alignItems: "center",
-                                        // justifyContent: "center",
-                                        // marginTop: "10px",
-                                      }
-                                    }
-                                  >
-                                  <Label check style={{fontSize : "10px",display: "flex",flexDirection: "column-reverse"}}>
-                                      <Input
-                                        type="checkbox"
-                                        name="is_default"
-                                        id={`is_default_s_${index}`}
-                                        checked={
-                                          x.is_default
-                                        }
-                                        onChange={(e) =>
-                                          handleDefaultChangeVariation(ind, index)
-                                        }
-                                      />
-                                      Set Default Image
-                                    </Label>
-                                  </FormGroup>
-                                            </Grid>
-                                          </Grid>
-                                          <RemoveCircleOutline
-                                                    className="remove-icon-product"
-                                                    color="secondary"
-                                                    onClick={() => {
-                                                      // removeProduct(index);
-                                                      // setSelectedImages(
-                                                      //   selectedImages.filter(
-                                                      //     (y, ind) => ind != index
-                                                      //   )
-                                                      // );
-                                                      // setProducts({
-                                                      //   ...products,
-                                                      //   images_list: products.images_list.filter(
-                                                      //     (y, ind) => ind != index
-                                                      //   ),
-                                                      //   variation_images: products.variation_images.filter(
-                                                      //     (y, ind) => ind != index
-                                                      //   ),
-                                                      // });
-                                                      removeProductVariation(ind, index)
-                                                    }}
+                                                >
+                                                  <DragHandleOutlined
+                                                    style={{ cursor: "grab" }}
+                                                    color="disabled"
                                                   />
-                                        </Paper>
-                                      </Grid>
-                                    </React.Fragment>
-                                  ))}
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={10}>
+                                                  <div
+                                                    style={{
+                                                      width: "100%",
+                                                      height: "120px",
+                                                    }}
+                                                  >
+                                                    <img
+                                                      src={x.image}
+                                                      alt=""
+                                                      style={{
+                                                        width: "100%",
+                                                        height: "100%",
+                                                        objectFit: "contain",
+                                                      }}
+                                                    />
+                                                  </div>
+                                                  <FormGroup
+                                                    check
+                                                    style={
+                                                      {
+                                                        // height: "100%",
+                                                        // display: "flex",
+                                                        // // flexDirection: "column",
+                                                        // alignItems: "center",
+                                                        // justifyContent: "center",
+                                                        // marginTop: "10px",
+                                                      }
+                                                    }
+                                                  >
+                                                    <Label
+                                                      check
+                                                      style={{
+                                                        fontSize: "10px",
+                                                        display: "flex",
+                                                        flexDirection:
+                                                          "column-reverse",
+                                                      }}
+                                                    >
+                                                      <Input
+                                                        type="checkbox"
+                                                        name="is_default"
+                                                        id={`is_default_s_${index}`}
+                                                        checked={x.is_default}
+                                                        onChange={(e) =>
+                                                          handleDefaultChangeVariation(
+                                                            ind,
+                                                            index
+                                                          )
+                                                        }
+                                                      />
+                                                      Set Default Image
+                                                    </Label>
+                                                  </FormGroup>
+                                                </Grid>
+                                              </Grid>
+                                              <RemoveCircleOutline
+                                                className="remove-icon-product"
+                                                color="secondary"
+                                                onClick={() => {
+                                                  // removeProduct(index);
+                                                  // setSelectedImages(
+                                                  //   selectedImages.filter(
+                                                  //     (y, ind) => ind != index
+                                                  //   )
+                                                  // );
+                                                  // setProducts({
+                                                  //   ...products,
+                                                  //   images_list: products.images_list.filter(
+                                                  //     (y, ind) => ind != index
+                                                  //   ),
+                                                  //   variation_images: products.variation_images.filter(
+                                                  //     (y, ind) => ind != index
+                                                  //   ),
+                                                  // });
+                                                  removeProductVariation(
+                                                    ind,
+                                                    index
+                                                  );
+                                                }}
+                                              />
+                                            </Paper>
+                                          </Grid>
+                                        </React.Fragment>
+                                      ))}
+                                  </Grid>
+                                  <hr />
+                                </Grid>
                               </Grid>
-                              <hr />
-                            </Grid>
-                          </Grid>
-                        </Row>
-                      </Col>
+                            </Row>
+                          </Col>
                           {/* <Col sm={11}>
                             <FormGroup>
                               <Label for="sorting">Arabic Tags</Label>
@@ -1587,8 +1668,8 @@ const ProductsForm = (props) => {
                       Add Variation
                     </Button.Ripple>
                   </div>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup>
                     <Label for="category">Select Category</Label>
                     <CustomInput
@@ -1608,8 +1689,8 @@ const ProductsForm = (props) => {
                       ))}
                     </CustomInput>
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup>
                     <Label for="sub_category">Select Sub-Category</Label>
                     <CustomInput
@@ -1631,8 +1712,8 @@ const ProductsForm = (props) => {
                         ))}
                     </CustomInput>
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup>
                     <Label for="tags">Tags</Label>
                     <MultiSelect
@@ -1647,8 +1728,8 @@ const ProductsForm = (props) => {
                       })}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup>
                     <Label for="tags">Arabic Tags</Label>
                     <MultiSelect
@@ -1663,8 +1744,8 @@ const ProductsForm = (props) => {
                       })}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup>
                     <Label for="sorting">Sorting Filters</Label>
                     <MultiSelect
@@ -1679,10 +1760,10 @@ const ProductsForm = (props) => {
                       })}
                     />
                   </FormGroup>
-                }
+                )}
 
                 {/* //!---------------Upload Images-------------------------- */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Card className="inner-card-wrap">
                     <CardHeader>
                       <CardTitle>Add Product Information</CardTitle>
@@ -1712,7 +1793,9 @@ const ProductsForm = (props) => {
                         </Col>
                         <Col sm={6}>
                           <FormGroup className="my-2">
-                            <Label for="banner_images_list">Banner Images</Label>
+                            <Label for="banner_images_list">
+                              Banner Images
+                            </Label>
                             <div className="clearfix" />
                             <div className="img-preview-wrapper">
                               {bannerThumbnailPreview !== "" && (
@@ -1734,25 +1817,28 @@ const ProductsForm = (props) => {
                       </Row>
 
                       {/* Images List */}
-                      {products.is_new == 1 && products.variations.length > 0 ? "" :
-                      <FormGroup className="my-2">
-                        <Label for="images_list">Slider Images</Label>
-                        <div className="clearfix" />
+                      {products.is_new == 1 &&
+                      products.variations.length > 0 ? (
+                        ""
+                      ) : (
+                        <FormGroup className="my-2">
+                          <Label for="images_list">Slider Images</Label>
+                          <div className="clearfix" />
 
-                        <Button.Ripple
-                          color="primary"
-                          onClick={() => {
-                            setIsSingle(false);
-                            setIsBanner(false);
-                            setModalShow(true);
-                            setArabicVeriationIndex(0)
-                            setIsArabicSingle(false);
-                          }}
-                        >
-                          Add Slider Images
-                        </Button.Ripple>
-                      </FormGroup>
-                      }
+                          <Button.Ripple
+                            color="primary"
+                            onClick={() => {
+                              setIsSingle(false);
+                              setIsBanner(false);
+                              setModalShow(true);
+                              setArabicVeriationIndex(0);
+                              setIsArabicSingle(false);
+                            }}
+                          >
+                            Add Slider Images
+                          </Button.Ripple>
+                        </FormGroup>
+                      )}
                       {/* <Row>
                         {selectedImages?.map((x, index) => (
                           <Col sm={3} key={index}>
@@ -1814,7 +1900,10 @@ const ProductsForm = (props) => {
                           </Col>
                         ))}
                       </Row> */}
-                      {products.is_new == 1 && products.variations.length > 0 ? "" :
+                      {products.is_new == 1 &&
+                      products.variations.length > 0 ? (
+                        ""
+                      ) : (
                         <Row>
                           <Grid container spacing={2}>
                             {/* <Grid item xs={12}></Grid> */}
@@ -1825,24 +1914,25 @@ const ProductsForm = (props) => {
                                   .map((x, index) => (
                                     <React.Fragment key={index}>
                                       <Grid item xs={3} sm={3}>
-
                                         <Paper
                                           className="px-2 py-3 header-menu-list-item"
                                           key={index + 1}
                                           id={index + 1}
                                           draggable
                                           onDragStart={handleDrag}
-                                          onDrop={(ev) => handleDrop(ev, index + 1)}
-                                          onDragOver={(ev) => ev.preventDefault()}
+                                          onDrop={(ev) =>
+                                            handleDrop(ev, index + 1)
+                                          }
+                                          onDragOver={(ev) =>
+                                            ev.preventDefault()
+                                          }
                                           style={{
                                             display: "flex",
                                             alignItems: "center",
                                             height: "150px",
                                           }}
                                         >
-
                                           <Grid container spacing={1}>
-
                                             <Grid
                                               item
                                               xs={12}
@@ -1859,32 +1949,52 @@ const ProductsForm = (props) => {
                                             </Grid>
 
                                             <Grid item xs={12} sm={10}>
-                                              <div style={{ width: "100%", height: "120px"}} >
-                                                  <img
-                                                    src={x.image}
-                                                    alt=""
+                                              <div
+                                                style={{
+                                                  width: "100%",
+                                                  height: "120px",
+                                                }}
+                                              >
+                                                <img
+                                                  src={x.image}
+                                                  alt=""
+                                                  style={{
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    objectFit: "contain",
+                                                  }}
+                                                />
+                                                <FormGroup
+                                                  check
+                                                  style={{ bottom: "10px" }}
+                                                >
+                                                  <Label
+                                                    check
                                                     style={{
-                                                      width: "100%",
-                                                      height: "100%",
-                                                      objectFit: "contain",
+                                                      fontSize: "10px",
+                                                      display: "flex",
+                                                      flexDirection:
+                                                        "column-reverse",
                                                     }}
-                                                  />
-                                  <FormGroup check style={{bottom: "10px"}} >
-                                  <Label check style={{fontSize : "10px",display: "flex",flexDirection: "column-reverse"}}>
-                                      <Input
-                                        type="checkbox"
-                                        name="is_default"
-                                        id={`is_default_s_${index}`}
-                                        checked={
-                                          x.is_default
-                                        }
-                                        onChange={(e) =>
-                                          handleSingleDefaultChange(e, index, x)
-                                        }
-                                      />
-                                      <span>Default/First Image ?</span>
-                                    </Label>
-                                  </FormGroup>
+                                                  >
+                                                    <Input
+                                                      type="checkbox"
+                                                      name="is_default"
+                                                      id={`is_default_s_${index}`}
+                                                      checked={x.is_default}
+                                                      onChange={(e) =>
+                                                        handleSingleDefaultChange(
+                                                          e,
+                                                          index,
+                                                          x
+                                                        )
+                                                      }
+                                                    />
+                                                    <span>
+                                                      Default/First Image ?
+                                                    </span>
+                                                  </Label>
+                                                </FormGroup>
                                               </div>
                                             </Grid>
                                             {/* <Grid
@@ -1892,7 +2002,7 @@ const ProductsForm = (props) => {
                                               xs={12}
                                               style={{ position: "relative" }}
                                             > */}
-                                              {/* <small
+                                            {/* <small
                                                 className="mb-0"
                                                 style={{
                                                   position: "absolute",
@@ -1910,26 +2020,28 @@ const ProductsForm = (props) => {
                                             {/* </Grid> */}
                                           </Grid>
                                           <RemoveCircleOutline
-                                                    className="remove-icon-product"
-                                                    color="secondary"
-                                                    onClick={() => {
-                                                      removeProduct(index);
-                                                      setSelectedImages(
-                                                        selectedImages.filter(
-                                                          (y, ind) => ind != index
-                                                        )
-                                                      );
-                                                      setProducts({
-                                                        ...products,
-                                                        images_list: products.images_list.filter(
-                                                          (y, ind) => ind != index
-                                                        ),
-                                                        variation_images: products.variation_images.filter(
-                                                          (y, ind) => ind != index
-                                                        ),
-                                                      });
-                                                    }}
-                                                  />
+                                            className="remove-icon-product"
+                                            color="secondary"
+                                            onClick={() => {
+                                              removeProduct(index);
+                                              setSelectedImages(
+                                                selectedImages.filter(
+                                                  (y, ind) => ind != index
+                                                )
+                                              );
+                                              setProducts({
+                                                ...products,
+                                                images_list:
+                                                  products.images_list.filter(
+                                                    (y, ind) => ind != index
+                                                  ),
+                                                variation_images:
+                                                  products.variation_images.filter(
+                                                    (y, ind) => ind != index
+                                                  ),
+                                              });
+                                            }}
+                                          />
                                         </Paper>
                                       </Grid>
                                     </React.Fragment>
@@ -1957,13 +2069,13 @@ const ProductsForm = (props) => {
                             </Grid> */}
                           </Grid>
                         </Row>
-                      }
+                      )}
                     </CardBody>
                   </Card>
-                }
+                )}
 
                 {/* //!------------------------------------------------------------ */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="my-2">
                     <Label for="downloads">Downloads</Label>
                     <CustomInput
@@ -1983,9 +2095,9 @@ const ProductsForm = (props) => {
                       )}
                     </p>
                   </FormGroup>
-                }
+                )}
                 {/* ----------------------------- */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div>
                     <Label for="short_description">Short Description</Label>
                     <CKEditor
@@ -2001,8 +2113,8 @@ const ProductsForm = (props) => {
                       }
                     />
                   </div>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div>
                     <Label for="long_description">Long Description</Label>
                     <CKEditor
@@ -2018,8 +2130,8 @@ const ProductsForm = (props) => {
                       }
                     />
                   </div>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div>
                     <Label for="specifications">Specifications</Label>
                     <CKEditor
@@ -2038,8 +2150,8 @@ const ProductsForm = (props) => {
                       }
                     />
                   </div>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Row>
                     <Col sm={6}>
                       <FormGroup className="my-2">
@@ -2086,7 +2198,7 @@ const ProductsForm = (props) => {
                       </FormGroup>
                     </Col>
                   </Row>
-                }
+                )}
 
                 {/* //!-----------------------Meta Tag Details----------------------------------- */}
                 <Card className="inner-card-wrap">
@@ -2143,86 +2255,98 @@ const ProductsForm = (props) => {
                         <CardTitle>Select Variation Images</CardTitle>
                       </CardHeader>
                       <CardBody>
-                        {products.images_list?.sort((a, b) => a.order - b.order).map((x, index) => (
-                          <Row>
-                            <Col sm={4}>
-                              <div style={{ width: "100%" }}>
-                                <img
-                                  src={x}
-                                  alt=""
+                        {products.images_list
+                          ?.sort((a, b) => a.order - b.order)
+                          .map((x, index) => (
+                            <Row>
+                              <Col sm={4}>
+                                <div style={{ width: "100%" }}>
+                                  <img
+                                    src={x}
+                                    alt=""
+                                    style={{
+                                      width: "100%",
+                                      height: "100%",
+                                      objectFit: "contain",
+                                    }}
+                                  />
+                                </div>
+                              </Col>
+                              <Col sm={4}>
+                                <FormGroup
                                   style={{
-                                    width: "100%",
                                     height: "100%",
-                                    objectFit: "contain",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    // alignItems:'center',
+                                    justifyContent: "center",
                                   }}
-                                />
-                              </div>
-                            </Col>
-                            <Col sm={4}>
-                              <FormGroup
-                                style={{
-                                  height: "100%",
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  // alignItems:'center',
-                                  justifyContent: "center",
-                                }}
-                              >
-                                <Label for="variation_type">
-                                  Select Variation
-                                </Label>
-                                <CustomInput
-                                  type="select"
-                                  name="variation_type"
-                                  id={`variation_type_${index}`}
-                                  value={
-                                    products.variation_images?.[index]
-                                      ?.variation
-                                  }
-                                  onChange={(e) =>
-                                    handleVariationImageChange(e, index, x)
-                                  }
                                 >
-                                  <option value="all">Select Variation</option>
-                                  {products.variations?.map((x) => (
-                                    <React.Fragment key={x._id}>
-                                      {<option value={x.name}>{x.name}</option>}
-                                    </React.Fragment>
-                                  ))}
-                                </CustomInput>
-                              </FormGroup>
-                            </Col>
-                            <Col sm={4}>
-                              <FormGroup
-                                check
-                                style={{
-                                  height: "100%",
-                                  display: "flex",
-                                  // flexDirection: "column",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  marginTop: "10px",
-                                }}
-                              >
-                                <Label check>
-                                  <Input
-                                    type="checkbox"
-                                    name="is_default"
-                                    id={`is_default_${index}`}
-                                    checked={
+                                  <Label for="variation_type">
+                                    Select Variation
+                                  </Label>
+                                  <CustomInput
+                                    type="select"
+                                    name="variation_type"
+                                    id={`variation_type_${index}`}
+                                    value={
                                       products.variation_images?.[index]
-                                        ?.is_default
+                                        ?.variation
                                     }
                                     onChange={(e) =>
-                                      handleVariationDefaultChange(e, index, x)
+                                      handleVariationImageChange(e, index, x)
                                     }
-                                  />
-                                  <span>Default/First Image ?</span>
-                                </Label>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                        ))}
+                                  >
+                                    <option value="all">
+                                      Select Variation
+                                    </option>
+                                    {products.variations?.map((x) => (
+                                      <React.Fragment key={x._id}>
+                                        {
+                                          <option value={x.name}>
+                                            {x.name}
+                                          </option>
+                                        }
+                                      </React.Fragment>
+                                    ))}
+                                  </CustomInput>
+                                </FormGroup>
+                              </Col>
+                              <Col sm={4}>
+                                <FormGroup
+                                  check
+                                  style={{
+                                    height: "100%",
+                                    display: "flex",
+                                    // flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    marginTop: "10px",
+                                  }}
+                                >
+                                  <Label check>
+                                    <Input
+                                      type="checkbox"
+                                      name="is_default"
+                                      id={`is_default_${index}`}
+                                      checked={
+                                        products.variation_images?.[index]
+                                          ?.is_default
+                                      }
+                                      onChange={(e) =>
+                                        handleVariationDefaultChange(
+                                          e,
+                                          index,
+                                          x
+                                        )
+                                      }
+                                    />
+                                    <span>Default/First Image ?</span>
+                                  </Label>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                          ))}
                       </CardBody>
                     </Card>
                   )}
@@ -2255,7 +2379,6 @@ const ProductsForm = (props) => {
         />
       </Card>
 
-
       {/* *********************
       ARABIC VERSION FIELDS
       ********************* */}
@@ -2279,7 +2402,7 @@ const ProductsForm = (props) => {
               >
                 {({ errors, touched }) => (
                   <Form>
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <FormGroup className="">
                         <Label for="name">Name</Label>
                         <Field
@@ -2290,20 +2413,20 @@ const ProductsForm = (props) => {
                           className={`form-control`}
                         />
                       </FormGroup>
-                    }
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                    )}
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <FormGroup className="my-2">
-                        <Label for="product_code">FirstCry Link</Label>
+                        <Label for="product_code">Nahdi Link</Label>
                         <Field
                           name="firstcry_arabic_link"
-                          id="firstcry_link"
+                          id="firstcry_arabic_link"
                           onChange={handleArabicInput}
-                          value={products.arabic?.firstcry_link}
+                          value={products.arabic?.firstcry_arabic_link}
                           className={`form-control`}
                         />
                       </FormGroup>
-                    }
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                    )}
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <FormGroup>
                         <Label for="tags">Tags</Label>
                         <MultiSelect
@@ -2330,15 +2453,15 @@ const ProductsForm = (props) => {
                           })}
                         />
                       </FormGroup>
-                    }
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
-                  <div className="mb-2">
-                    <Label>Variations</Label>
-                    <div className="clearfix mb-1" />
-                    {products?.arabic.variations?.map((x, ind) => (
-                      <div className="variation-row-wrapper mb-2">
-                        <Row>
-                          {/* <Col sm={4}>
+                    )}
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
+                      <div className="mb-2">
+                        <Label>Variations</Label>
+                        <div className="clearfix mb-1" />
+                        {products?.arabic.variations?.map((x, ind) => (
+                          <div className="variation-row-wrapper mb-2">
+                            <Row>
+                              {/* <Col sm={4}>
                             <Field
                               name={`name`}
                               id={`variation_name_${ind}`}
@@ -2348,17 +2471,19 @@ const ProductsForm = (props) => {
                               className={`form-control`}
                             />
                           </Col> */}
-                          <Col sm={4} style={{marginBottom : "10px"}}>
-                            <Field
-                              name={`arabic_name`}
-                              id={`variation_name_${ind}`}
-                              onChange={(e) => handleArabicVariationChange(e, ind)}
-                              value={x.arabic_name}
-                              placeholder={"arabic name"}
-                              className={`form-control`}
-                            />
-                          </Col>
-                          {/* <Col sm={2}>
+                              <Col sm={4} style={{ marginBottom: "10px" }}>
+                                <Field
+                                  name={`arabic_name`}
+                                  id={`variation_name_${ind}`}
+                                  onChange={(e) =>
+                                    handleArabicVariationChange(e, ind)
+                                  }
+                                  value={x.arabic_name}
+                                  placeholder={"arabic name"}
+                                  className={`form-control`}
+                                />
+                              </Col>
+                              {/* <Col sm={2}>
                             <Field
                               name={`code`}
                               id={`variation_code_${ind}`}
@@ -2368,7 +2493,7 @@ const ProductsForm = (props) => {
                               className={`form-control`}
                             />
                           </Col> */}
-                          {/* <Col sm={4}>
+                              {/* <Col sm={4}>
                             <Field
                               name={`link`}
                               id={`variation_link_${ind}`}
@@ -2378,87 +2503,100 @@ const ProductsForm = (props) => {
                               className={`form-control`}
                             />
                           </Col> */}
-                          <Col sm={4}>
-                            <Field
-                              name={`arabic_link`}
-                              id={`variation_link_${ind}`}
-                              onChange={(e) => handleArabicVariationChange(e, ind)}
-                              value={x.arabic_link}
-                              placeholder={"Arabic First Cry Link"}
-                              className={`form-control`}
-                            />
-                          </Col>
-                          <Col sm={4}>
-                            <Field
-                              name={`arabic_variation_price`}
-                              id={`arabic_variation_price_${ind}`}
-                              onChange={(e) => handleArabicVariationChange(e, ind)}
-                              value={x.arabic_variation_price}
-                              placeholder={"Price"}
-                              className={`form-control`}
-                            />
-                          </Col>
-                          <Col sm={4}>
-                            <Field
-                                name={`arabic_code`}
-                                id={`variation_arabic_code_${ind}`}
-                                onChange={(e) => handleArabicVariationChange(e, ind)}
-                                value={x.arabic_code}
-                                placeholder={"code"}
-                                className={`form-control`}
-                              />
-                          </Col>
-                          <Col sm={4}>
-                            <Field
-                              name={`arabic_variation_stock`}
-                              id={`arabic_variation_stock${ind}`}
-                              onChange={(e) => handleArabicVariationChange(e, ind)}
-                              value={x.arabic_variation_stock}
-                              placeholder={"Stock"}
-                              className={`form-control`}
-                            />
-                          </Col>
-                          <Col sm={11} style={{marginTop : "10px"}}>
-                          <FormGroup>
-                              <MultiSelect
-                                isMulti
-                                options={arabicTagsList}
-                                placeholder="Select Arabic Tags"
-                                className="variation-tags"
-                                onChange={(e) =>
-                                  handleArabicVariationArabicSortingSelect(e, ind)
-                                }
-                                value={x?.arabic_sortings?.map((x) => {
-                                  return {
-                                    value: x,
-                                    label: x,
-                                  };
-                                })}
-                              />
-                            </FormGroup>
-                          </Col>
-                          {/* Images List */}
-                          <Col sm={11}>
-                            <FormGroup className="my-2">
-                              <Label for="images_list">Arabic Variation Images</Label>
-                              <div className="clearfix" />
+                              <Col sm={4}>
+                                <Field
+                                  name={`arabic_link`}
+                                  id={`variation_link_${ind}`}
+                                  onChange={(e) =>
+                                    handleArabicVariationChange(e, ind)
+                                  }
+                                  value={x.arabic_link}
+                                  placeholder={"Arabic First Cry Link"}
+                                  className={`form-control`}
+                                />
+                              </Col>
+                              <Col sm={4}>
+                                <Field
+                                  name={`arabic_variation_price`}
+                                  id={`arabic_variation_price_${ind}`}
+                                  onChange={(e) =>
+                                    handleArabicVariationChange(e, ind)
+                                  }
+                                  value={x.arabic_variation_price}
+                                  placeholder={"Price"}
+                                  className={`form-control`}
+                                />
+                              </Col>
+                              <Col sm={4}>
+                                <Field
+                                  name={`arabic_code`}
+                                  id={`variation_arabic_code_${ind}`}
+                                  onChange={(e) =>
+                                    handleArabicVariationChange(e, ind)
+                                  }
+                                  value={x.arabic_code}
+                                  placeholder={"code"}
+                                  className={`form-control`}
+                                />
+                              </Col>
+                              <Col sm={4}>
+                                <Field
+                                  name={`arabic_variation_stock`}
+                                  id={`arabic_variation_stock${ind}`}
+                                  onChange={(e) =>
+                                    handleArabicVariationChange(e, ind)
+                                  }
+                                  value={x.arabic_variation_stock}
+                                  placeholder={"Stock"}
+                                  className={`form-control`}
+                                />
+                              </Col>
+                              <Col sm={11} style={{ marginTop: "10px" }}>
+                                <FormGroup>
+                                  <MultiSelect
+                                    isMulti
+                                    options={arabicTagsList}
+                                    placeholder="Select Arabic Tags"
+                                    className="variation-tags"
+                                    onChange={(e) =>
+                                      handleArabicVariationArabicSortingSelect(
+                                        e,
+                                        ind
+                                      )
+                                    }
+                                    value={x?.arabic_sortings?.map((x) => {
+                                      return {
+                                        value: x,
+                                        label: x,
+                                      };
+                                    })}
+                                  />
+                                </FormGroup>
+                              </Col>
+                              {/* Images List */}
+                              <Col sm={11}>
+                                <FormGroup className="my-2">
+                                  <Label for="images_list">
+                                    Arabic Variation Images
+                                  </Label>
+                                  <div className="clearfix" />
 
-                              <Button.Ripple
-                                color="primary"
-                                onClick={() => {
-                                  setIsSingle(false);
-                                  setIsBanner(false);
-                                  setModalShow(true);
-                                  setArabicVeriationIndex(ind + 1)
-                                }}
-                              >
-                                Add Variation Images
-                              </Button.Ripple>
-                            </FormGroup>
-                          </Col>
-                        <Col sm={11}>
-                          <Row style={{margin: "0px"}}>
-                            {/* {products.variations[ind].variation_images ?.map((x, index) => (
+                                  <Button.Ripple
+                                    color="primary"
+                                    onClick={() => {
+                                      setIsSingle(false);
+                                      setIsBanner(false);
+                                      setModalShow(true);
+                                      setArabicVeriationIndex(ind + 1);
+                                    }}
+                                  >
+                                    Add Variation Images
+                                  </Button.Ripple>
+                                </FormGroup>
+                              </Col>
+                              <Col sm={11}>
+                                <Row style={{ margin: "0px" }}>
+                                  {/* {products.variations[ind].variation_images ?.map((x, index) => (
                               <Col sm={3} key={index}>
                                 <div className="img-preview-wrapper preview-small">
                                   <RemoveCircleOutline
@@ -2518,95 +2656,117 @@ const ProductsForm = (props) => {
                               </Col>
                             ))} */}
 
-                          <Grid container spacing={2}>
-                            {/* <Grid item xs={12}></Grid> */}
-                            <Grid item sm={12}>
-                              <Grid container spacing={1}>
-                                {products?.arabic?.variations[ind]?.variation_images
-                                  ?.sort((a, b) => a.order - b.order)
-                                  .map((x, index) => (
-                                    <React.Fragment>
-                                      <Grid item xs={3} sm={3}>
-                                        <Paper
-                                          className="px-2 py-3 header-menu-list-item"
-                                          key={index + 1}
-                                          id={index + 1}
-                                          draggable
-                                          onDragStart={handleArabicDrag}
-                                          onDrop={(ev) => handleArabicDrop(ev, index + 1, ind)}
-                                          onDragOver={(ev) => ev.preventDefault()}
-                                          style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            height: "150px",
-                                          }}
-                                        >
-
-                                          <Grid container spacing={1}>
-                                            <Grid
-                                              item
-                                              xs={12}
-                                              sm={2}
-                                              style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                              }}
-                                            >
-                                              <DragHandleOutlined
-                                                style={{ cursor: "grab" }}
-                                                color="disabled"
-                                              />
-                                            </Grid>
-
-                                            <Grid item xs={12} sm={10}>
-                                              <div
-                                                style={{
-                                                  width: "100%",
-                                                  height: "120px",
-                                                }}
-                                              >
-                                                <img
-                                                  src={x.image}
-                                                  alt=""
+                                  <Grid container spacing={2}>
+                                    {/* <Grid item xs={12}></Grid> */}
+                                    <Grid item sm={12}>
+                                      <Grid container spacing={1}>
+                                        {products?.arabic?.variations[
+                                          ind
+                                        ]?.variation_images
+                                          ?.sort((a, b) => a.order - b.order)
+                                          .map((x, index) => (
+                                            <React.Fragment>
+                                              <Grid item xs={3} sm={3}>
+                                                <Paper
+                                                  className="px-2 py-3 header-menu-list-item"
+                                                  key={index + 1}
+                                                  id={index + 1}
+                                                  draggable
+                                                  onDragStart={handleArabicDrag}
+                                                  onDrop={(ev) =>
+                                                    handleArabicDrop(
+                                                      ev,
+                                                      index + 1,
+                                                      ind
+                                                    )
+                                                  }
+                                                  onDragOver={(ev) =>
+                                                    ev.preventDefault()
+                                                  }
                                                   style={{
-                                                    width: "100%",
-                                                    height: "100%",
-                                                    objectFit: "contain",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    height: "150px",
                                                   }}
-                                                />
+                                                >
+                                                  <Grid container spacing={1}>
+                                                    <Grid
+                                                      item
+                                                      xs={12}
+                                                      sm={2}
+                                                      style={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                      }}
+                                                    >
+                                                      <DragHandleOutlined
+                                                        style={{
+                                                          cursor: "grab",
+                                                        }}
+                                                        color="disabled"
+                                                      />
+                                                    </Grid>
 
-                                              </div>
-                                              <FormGroup
-                                    check
-                                    style={
-                                      {
-                                        // height: "100%",
-                                        // display: "flex",
-                                        // // flexDirection: "column",
-                                        // alignItems: "center",
-                                        // justifyContent: "center",
-                                        // marginTop: "10px",
-                                      }
-                                    }
-                                  >
-                                  <Label check style={{fontSize : "10px",display: "flex",flexDirection: "column-reverse"}}>
-                                      <Input
-                                        type="checkbox"
-                                        name="is_default"
-                                        id={`is_default_s_${index}`}
-                                        checked={
-                                          x.is_default
-                                        }
-                                        onChange={(e) =>
-                                          handleDefaultChangeArabicVariation(ind, index)
-                                        }
-                                      />
-                                      Set Default Image
-                                    </Label>
-                                  </FormGroup>
-                                            </Grid>
-                                          </Grid>
-                                          <RemoveCircleOutline
+                                                    <Grid item xs={12} sm={10}>
+                                                      <div
+                                                        style={{
+                                                          width: "100%",
+                                                          height: "120px",
+                                                        }}
+                                                      >
+                                                        <img
+                                                          src={x.image}
+                                                          alt=""
+                                                          style={{
+                                                            width: "100%",
+                                                            height: "100%",
+                                                            objectFit:
+                                                              "contain",
+                                                          }}
+                                                        />
+                                                      </div>
+                                                      <FormGroup
+                                                        check
+                                                        style={
+                                                          {
+                                                            // height: "100%",
+                                                            // display: "flex",
+                                                            // // flexDirection: "column",
+                                                            // alignItems: "center",
+                                                            // justifyContent: "center",
+                                                            // marginTop: "10px",
+                                                          }
+                                                        }
+                                                      >
+                                                        <Label
+                                                          check
+                                                          style={{
+                                                            fontSize: "10px",
+                                                            display: "flex",
+                                                            flexDirection:
+                                                              "column-reverse",
+                                                          }}
+                                                        >
+                                                          <Input
+                                                            type="checkbox"
+                                                            name="is_default"
+                                                            id={`is_default_s_${index}`}
+                                                            checked={
+                                                              x.is_default
+                                                            }
+                                                            onChange={(e) =>
+                                                              handleDefaultChangeArabicVariation(
+                                                                ind,
+                                                                index
+                                                              )
+                                                            }
+                                                          />
+                                                          Set Default Image
+                                                        </Label>
+                                                      </FormGroup>
+                                                    </Grid>
+                                                  </Grid>
+                                                  <RemoveCircleOutline
                                                     className="remove-icon-product"
                                                     color="secondary"
                                                     onClick={() => {
@@ -2625,20 +2785,23 @@ const ProductsForm = (props) => {
                                                       //     (y, ind) => ind != index
                                                       //   ),
                                                       // });
-                                                      removeArabicProductVariation(ind, index)
+                                                      removeArabicProductVariation(
+                                                        ind,
+                                                        index
+                                                      );
                                                     }}
                                                   />
-                                        </Paper>
+                                                </Paper>
+                                              </Grid>
+                                            </React.Fragment>
+                                          ))}
                                       </Grid>
-                                    </React.Fragment>
-                                  ))}
-                              </Grid>
-                              <hr />
-                            </Grid>
-                          </Grid>
-                        </Row>
-                      </Col>
-                          {/* <Col sm={11}>
+                                      <hr />
+                                    </Grid>
+                                  </Grid>
+                                </Row>
+                              </Col>
+                              {/* <Col sm={11}>
                             <FormGroup>
                               <Label for="sorting">Arabic Tags</Label>
                               <MultiSelect
@@ -2658,32 +2821,34 @@ const ProductsForm = (props) => {
                               />
                             </FormGroup>
                           </Col> */}
-                          <Col sm={11}>
-                            <div
-                              style={{ height: "100%" }}
-                              className="d-flex align-items-center"
-                            >
-                              <DeleteOutlined
-                                color="secondary"
-                                onClick={() => removeArabicVariation(ind)}
-                              />
-                            </div>
-                          </Col>
-                        </Row>
+                              <Col sm={11}>
+                                <div
+                                  style={{ height: "100%" }}
+                                  className="d-flex align-items-center"
+                                >
+                                  <DeleteOutlined
+                                    color="secondary"
+                                    onClick={() => removeArabicVariation(ind)}
+                                  />
+                                </div>
+                              </Col>
+                            </Row>
+                          </div>
+                        ))}
+                        <Button.Ripple
+                          onClick={addArabicVariation}
+                          color="danger"
+                          type="button"
+                          className="mt-0"
+                          size="sm"
+                        >
+                          Add Arabic Variation
+                        </Button.Ripple>
                       </div>
-                    ))}
-                    <Button.Ripple
-                      onClick={addArabicVariation}
-                      color="danger"
-                      type="button"
-                      className="mt-0"
-                      size="sm"
-                    >
-                      Add Arabic Variation
-                    </Button.Ripple>
-                  </div>
-                }
-                    {products?.arabic?.variations?.length > 0 ? "" :
+                    )}
+                    {products?.arabic?.variations?.length > 0 ? (
+                      ""
+                    ) : (
                       <FormGroup className="my-2">
                         <Label for="images_list">Arabic Slider Images</Label>
                         <div className="clearfix" />
@@ -2695,92 +2860,113 @@ const ProductsForm = (props) => {
                             setIsBanner(false);
                             setModalShow(true);
                             setIsArabicSingle(true);
-                            setArabicVeriationIndex(0)
+                            setArabicVeriationIndex(0);
                           }}
                         >
                           Add Slider Images
                         </Button.Ripple>
                       </FormGroup>
-                      }
-                      { products?.arabic?.variations?.length > 0 ? "" :
-                        <Row>
-                          <Grid container spacing={2}>
-                            {/* <Grid item xs={12}></Grid> */}
-                            <Grid item sm={12}>
-                              <Grid container spacing={1}>
-                                {products?.arabic?.images_list
-                                  ?.sort((a, b) => a.order - b.order)
-                                  .map((x, index) => (
-                                    <React.Fragment key={index}>
-                                      <Grid item xs={3} sm={3}>
+                    )}
+                    {products?.arabic?.variations?.length > 0 ? (
+                      ""
+                    ) : (
+                      <Row>
+                        <Grid container spacing={2}>
+                          {/* <Grid item xs={12}></Grid> */}
+                          <Grid item sm={12}>
+                            <Grid container spacing={1}>
+                              {products?.arabic?.images_list
+                                ?.sort((a, b) => a.order - b.order)
+                                .map((x, index) => (
+                                  <React.Fragment key={index}>
+                                    <Grid item xs={3} sm={3}>
+                                      <Paper
+                                        className="px-2 py-3 header-menu-list-item"
+                                        key={index + 1}
+                                        id={index + 1}
+                                        draggable
+                                        onDragStart={handleArabicDrag}
+                                        onDrop={(ev) =>
+                                          handleArabicDrop(ev, index + 1)
+                                        }
+                                        onDragOver={(ev) => ev.preventDefault()}
+                                        style={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          height: "150px",
+                                        }}
+                                      >
+                                        <Grid container spacing={1}>
+                                          <Grid
+                                            item
+                                            xs={12}
+                                            sm={2}
+                                            style={{
+                                              display: "flex",
+                                              alignItems: "center",
+                                            }}
+                                          >
+                                            <DragHandleOutlined
+                                              style={{ cursor: "grab" }}
+                                              color="disabled"
+                                            />
+                                          </Grid>
 
-                                        <Paper
-                                          className="px-2 py-3 header-menu-list-item"
-                                          key={index + 1}
-                                          id={index + 1}
-                                          draggable
-                                          onDragStart={handleArabicDrag}
-                                          onDrop={(ev) => handleArabicDrop(ev, index + 1)}
-                                          onDragOver={(ev) => ev.preventDefault()}
-                                          style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            height: "150px",
-                                          }}
-                                        >
-
-                                          <Grid container spacing={1}>
-
-                                            <Grid
-                                              item
-                                              xs={12}
-                                              sm={2}
+                                          <Grid item xs={12} sm={10}>
+                                            <div
                                               style={{
-                                                display: "flex",
-                                                alignItems: "center",
+                                                width: "100%",
+                                                height: "120px",
                                               }}
                                             >
-                                              <DragHandleOutlined
-                                                style={{ cursor: "grab" }}
-                                                color="disabled"
+                                              <img
+                                                src={x.image}
+                                                alt=""
+                                                style={{
+                                                  width: "100%",
+                                                  height: "100%",
+                                                  objectFit: "contain",
+                                                }}
                                               />
-                                            </Grid>
-
-                                            <Grid item xs={12} sm={10}>
-                                              <div style={{ width: "100%", height: "120px"}} >
-                                                  <img
-                                                    src={x.image}
-                                                    alt=""
-                                                    style={{
-                                                      width: "100%",
-                                                      height: "100%",
-                                                      objectFit: "contain",
-                                                    }}
+                                              <FormGroup
+                                                check
+                                                style={{ bottom: "10px" }}
+                                              >
+                                                <Label
+                                                  check
+                                                  style={{
+                                                    fontSize: "10px",
+                                                    display: "flex",
+                                                    flexDirection:
+                                                      "column-reverse",
+                                                  }}
+                                                >
+                                                  <Input
+                                                    type="checkbox"
+                                                    name="is_default"
+                                                    id={`is_default_s_${index}`}
+                                                    checked={x.is_default}
+                                                    onChange={(e) =>
+                                                      handleSingleArabicDefaultChange(
+                                                        e,
+                                                        index,
+                                                        x
+                                                      )
+                                                    }
                                                   />
-                                  <FormGroup check style={{bottom: "10px"}} >
-                                  <Label check style={{fontSize : "10px",display: "flex",flexDirection: "column-reverse"}}>
-                                      <Input
-                                        type="checkbox"
-                                        name="is_default"
-                                        id={`is_default_s_${index}`}
-                                        checked={
-                                          x.is_default
-                                        }
-                                        onChange={(e) =>
-                                          handleSingleArabicDefaultChange(e, index, x)
-                                        }
-                                      />
-                                      <span>Default/First Image ?</span>
-                                    </Label>
-                                  </FormGroup>
-                                              </div>
-                                            </Grid>
-                                            {/* <Grid
+                                                  <span>
+                                                    Default/First Image ?
+                                                  </span>
+                                                </Label>
+                                              </FormGroup>
+                                            </div>
+                                          </Grid>
+                                          {/* <Grid
                                               item
                                               xs={12}
                                               style={{ position: "relative" }}
                                             > */}
-                                              {/* <small
+                                          {/* <small
                                                 className="mb-0"
                                                 style={{
                                                   position: "absolute",
@@ -2795,35 +2981,35 @@ const ProductsForm = (props) => {
                                               >
                                                 {x.substring(0, 60)}
                                               </small> */}
-                                            {/* </Grid> */}
-                                          </Grid>
-                                          <RemoveCircleOutline
-                                                    className="remove-icon-product"
-                                                    color="secondary"
-                                                    onClick={() => {
-                                                      removeArabicProduct(index);
-                                                      // setSelectedImages(
-                                                      //   selectedImages.filter(
-                                                      //     (y, ind) => ind != index
-                                                      //   )
-                                                      // );
-                                                      // setProducts({
-                                                      //   ...products.arabic,
-                                                      //   images_list: products.arabic.images_list.filter(
-                                                      //     (y, ind) => ind != index
-                                                      //   ),
-                                                      // });
-                                                    }}
-                                                  />
-                                        </Paper>
-                                      </Grid>
-                                    </React.Fragment>
-                                  ))}
-                              </Grid>
-                              <hr />
+                                          {/* </Grid> */}
+                                        </Grid>
+                                        <RemoveCircleOutline
+                                          className="remove-icon-product"
+                                          color="secondary"
+                                          onClick={() => {
+                                            removeArabicProduct(index);
+                                            // setSelectedImages(
+                                            //   selectedImages.filter(
+                                            //     (y, ind) => ind != index
+                                            //   )
+                                            // );
+                                            // setProducts({
+                                            //   ...products.arabic,
+                                            //   images_list: products.arabic.images_list.filter(
+                                            //     (y, ind) => ind != index
+                                            //   ),
+                                            // });
+                                          }}
+                                        />
+                                      </Paper>
+                                    </Grid>
+                                  </React.Fragment>
+                                ))}
                             </Grid>
+                            <hr />
+                          </Grid>
 
-                            {/* <Grid
+                          {/* <Grid
                               item
                               xs={12}
                               style={{
@@ -2840,10 +3026,10 @@ const ProductsForm = (props) => {
                                 Update Section
                               </MaterialButton>
                             </Grid> */}
-                          </Grid>
-                        </Row>
-                      }
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                        </Grid>
+                      </Row>
+                    )}
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <div>
                         <Label for="short_description">Short Description</Label>
                         <CKEditor
@@ -2862,8 +3048,8 @@ const ProductsForm = (props) => {
                           }
                         />
                       </div>
-                    }
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                    )}
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <div>
                         <Label for="long_description">Long Description</Label>
                         <CKEditor
@@ -2882,8 +3068,8 @@ const ProductsForm = (props) => {
                           }
                         />
                       </div>
-                    }
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                    )}
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <div>
                         <Label for="specifications">Specifications</Label>
                         <CKEditor
@@ -2908,7 +3094,7 @@ const ProductsForm = (props) => {
                           }
                         />
                       </div>
-                    }
+                    )}
                     {/* //!-----------------------Meta Tag Details----------------------------------- */}
                     <Card className="inner-card-wrap">
                       <CardHeader>
