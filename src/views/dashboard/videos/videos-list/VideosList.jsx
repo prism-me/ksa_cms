@@ -13,6 +13,7 @@ import { Search } from "react-feather";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
 import { API } from "../../../../http/API";
+import { connect } from "react-redux";
 
 const CustomHeader = (props) => {
   return (
@@ -61,9 +62,6 @@ class VideosList extends React.Component {
             {/* <FaEye size={20} className="action-icon-details" /> */}
             <MdEdit
               size={20}
-              style={{
-                color: "#e65550 ",
-              }}
               onClick={() => {
                 this.props.history.push(`/video/form/edit/${row._id}`);
               }}
@@ -171,4 +169,9 @@ class VideosList extends React.Component {
   }
 }
 
-export default VideosList;
+const mapStateToProps = (props) => {
+  return {
+    dataLog: props.auth.login,
+  };
+};
+export default connect(mapStateToProps)(VideosList);

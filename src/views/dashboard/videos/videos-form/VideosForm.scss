@@ -1,0 +1,17 @@
+.img-preview-wrapper {
+  height: 250px;
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  &.preview-small {
+    height: 200px;
+  }
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 6px;
+  }
+}

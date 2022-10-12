@@ -10,6 +10,7 @@ import {
 import NavbarBookmarks from "./NavbarBookmarks";
 import NavbarUser from "./NavbarUser";
 import userImg from "../../../assets/img/portrait/small/avatar-s-11.jpg";
+import ClearCache from "./ClearCache";
 
 const UserName = (props) => {
   let username = "";
@@ -75,25 +76,25 @@ const ThemeNavbar = (props) => {
             <div
               className="navbar-collapse"
               id="navbar-mobile"
-              
               ref={(el) => {
                 if (el) {
-                  el.style.setProperty('display', 'block', 'important');
+                  el.style.setProperty("display", "block", "important");
                 }
               }}
             >
-              {/* <div className="bookmark-wrapper">
-                <NavbarBookmarks
+              <div className="bookmark-wrapper">
+                <ClearCache />
+                {/* <NavbarBookmarks
                   sidebarVisibility={props.sidebarVisibility}
                   handleAppOverlay={props.handleAppOverlay}
-                />
-              </div> */}
+                /> */}
+              </div>
               {props.horizontal ? (
                 <div className="logo d-flex align-items-center">
                   <div className=" mr-50"></div>
                   <div className="brand-text mb-0">
-                <img src="https://pigeonarabia.com/static/media/logo.a08b0a0b.svg" />
-              </div>
+                    <img src="https://pigeonarabia.com/static/media/logo.a08b0a0b.svg" />
+                  </div>
                 </div>
               ) : null}
               <NavbarUser

@@ -51,7 +51,9 @@ const goodToKnowList = lazy(() =>
   import("./views/dashboard/good-to-know/good-to-know-list/GoodToKnowList")
 );
 const goodToKnowSortList = lazy(() =>
-  import("./views/dashboard/good-to-know/good-to-know-sort-list/GoodToKnowSortList")
+  import(
+    "./views/dashboard/good-to-know/good-to-know-sort-list/GoodToKnowSortList"
+  )
 );
 const goodToKnowForm = lazy(() =>
   import("./views/dashboard/good-to-know/good-to-know-form")
@@ -70,7 +72,9 @@ const breastFeedingAdvisorList = lazy(() =>
   )
 );
 const breastFeedingAdvisorSortList = lazy(() =>
-  import("./views/dashboard/breast-feeding-advisor/breast-feeding-advisor-sort-list/BreastFeedingAdvisorSortList")
+  import(
+    "./views/dashboard/breast-feeding-advisor/breast-feeding-advisor-sort-list/BreastFeedingAdvisorSortList"
+  )
 );
 const breastFeedingAdvisorForm = lazy(() =>
   import("./views/dashboard/breast-feeding-advisor/index")
@@ -346,7 +350,7 @@ class AppRouter extends React.Component {
     return (
       // Set the directory path if you are deploying in sub-folder
       <Router history={history}>
-         {!this.props.user?.isAuthenticated ? (
+        {!this.props.user?.isAuthenticated ? (
           <Switch>
             <AppRoute path="/page/login" component={Login} fullLayout />
             <AppRoute path="/pages/register" component={register} fullLayout />
@@ -394,7 +398,10 @@ class AppRouter extends React.Component {
             />
             <AppRoute path="/good-to-know/form" component={goodToKnowForm} />
             <AppRoute path="/good-to-know/list" component={goodToKnowList} />
-            <AppRoute path="/good-to-know-sort/list" component={goodToKnowSortList} />
+            <AppRoute
+              path="/good-to-know-sort/list"
+              component={goodToKnowSortList}
+            />
             <AppRoute
               path="/first-time-father/form"
               component={firstTimeFatherForm}
@@ -408,7 +415,7 @@ class AppRouter extends React.Component {
             <AppRoute path="/videos/list" component={videosList} />
             <AppRoute
               path="/breast-feeding-advisor/form/:id"
-              component={breastFeedingAdvisorForm }
+              component={breastFeedingAdvisorForm}
             />
             <AppRoute
               path="/breast-feeding-advisor/form"
@@ -424,8 +431,7 @@ class AppRouter extends React.Component {
             />
             <AppRoute path="/blog/form/:id" component={blogGridForm} />
             <AppRoute path="/blog/form" component={blogGridForm} />
-            <AppRoute path="/blog" component={blogGridList} /> 
-                       
+            <AppRoute path="/blog" component={blogGridList} />
             <AppRoute path="/pages/form/edit/:id" component={pagesForm} />
             <AppRoute path="/pages/form" component={pagesForm} />
             <AppRoute path="/pages" component={pagesList} />

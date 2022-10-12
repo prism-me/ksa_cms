@@ -8,7 +8,9 @@ import {
   Button,
   Label,
   Input,
-  CustomInput
+  CustomInput,
+  Col,
+  Row,
 } from "reactstrap";
 import { useHistory, useParams } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
@@ -16,6 +18,8 @@ import * as Yup from "yup";
 import "./VideosForm.scss";
 import { API } from "../../../../http/API";
 import { withRouter } from "react-router-dom";
+import { useSelector } from "react-redux";
+import GalleryModal from "../../gallery-modal/GalleryModal";
 
 const formSchema = Yup.object().shape({
   required: Yup.string().required("Required"),
@@ -28,7 +32,7 @@ const initialObj = {
   category_slug: "",
   arabic: {
     title: "",
-    category:"",
+    category: "",
   },
 };
 
@@ -38,22 +42,27 @@ const VideoForm = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [videoData, setVideoData] = useState({ ...initialObj });
   const [categories, setCategories] = useState([]);
+  const authAccessToken = useSelector((state) => state.auth.login.access_token);
+  const [imagesData, setImagesData] = useState([]);
+  const [isSingle, setIsSingle] = useState(false);
+  const [thumbnailPreview, setThumbnailPreview] = useState("");
+  const [isBanner, setIsBanner] = useState(false);
+  const [bannerThumbnailPreview, setBannerThumbnailPreview] = useState("");
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [modalShow, setModalShow] = React.useState(false);
 
   //!-----------Call Api for Edit--------------
   useEffect(() => {
-
     API.get("/categories")
-    .then((response) => {
-      if (response.status === 200 || response.status === 201) {
-        // setData(response.data);
-        console.log("=== cats response.data===");
-        setCategories(response.data)
-        console.log(response.data);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((response) => {
+        if (response.status === 200 || response.status === 201) {
+          setCategories(response.data);
+          console.log(response.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     if (id && id !== "") {
       setIsEdit(true);
@@ -65,17 +74,34 @@ const VideoForm = (props) => {
         })
         .catch((err) => console.log(err));
     }
-
   }, [id]);
+
+  useEffect(() => {
+    getGalleryImages();
+  }, []);
+
+  const getGalleryImages = () => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+        if (response.status === 200) {
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   //!------------Handle select Fields-------
 
   const handleCategorySelect = (e) => {
-
     let updatedVideo = { ...videoData };
-    updatedVideo.category_slug = e.target.value
-    updatedVideo.arabic.category = e.target[e.target.selectedIndex].getAttribute('data-arabic')
-    updatedVideo.category = e.target[e.target.selectedIndex].getAttribute('data-name')
+    updatedVideo.category_slug = e.target.value;
+    updatedVideo.arabic.category =
+      e.target[e.target.selectedIndex].getAttribute("data-arabic");
+    updatedVideo.category =
+      e.target[e.target.selectedIndex].getAttribute("data-name");
     // console.log("====category");
     // console.log(category);
     // return false;
@@ -87,7 +113,6 @@ const VideoForm = (props) => {
     // console.log("===updatedVideo===")
     // console.log(updatedVideo)
   };
-
 
   //!------------Handle Input Fields-------
   const handleFieldChange = (e) => {
@@ -129,6 +154,20 @@ const VideoForm = (props) => {
     }
   };
 
+  const handleImageSelect = (e, index) => {
+    if (e.target.checked) {
+      if (isSingle && !isBanner) {
+        setVideoData({
+          ...videoData,
+          image: imagesData[index].avatar,
+        });
+        setTimeout(() => {
+          setModalShow(false);
+        }, 500);
+      }
+    }
+  };
+
   return (
     <>
       <Card className="category-add-form">
@@ -164,73 +203,107 @@ const VideoForm = (props) => {
                     className={`form-control`}
                   />
                 </FormGroup>
-                {console.log(videoData,"videoDatavideoData")}
+                {console.log(videoData, "videoDatavideoData")}
                 <FormGroup className="mb-1">
                   <Label for="category">Select Category</Label>
-                    <CustomInput
-                      type="select"
-                      name="category"
-                      id="category"
-                      value={ videoData.category_slug}
-                      onChange={handleCategorySelect}
-                    >
-                      <option value="">Select Category</option>
-                      {categories?.map((x) => (
-                        // <React.Fragment key={}>
-                          <>
-                          {x.parent_id === null && (
-                            <option value={x.route} data-name={x.name} data-arabic={x.arabic.name}>{x.name}</option>
-                          )}
-                          </>
-                        // </React.Fragment>
-                      ))}
-                    </CustomInput>
+                  <CustomInput
+                    type="select"
+                    name="category"
+                    id="category"
+                    value={videoData.category_slug}
+                    onChange={handleCategorySelect}
+                  >
+                    <option value="">Select Category</option>
+                    {categories?.map((x) => (
+                      // <React.Fragment key={}>
+                      <>
+                        {x.parent_id === null && (
+                          <option
+                            value={x.route}
+                            data-name={x.name}
+                            data-arabic={x.arabic.name}
+                          >
+                            {x.name}
+                          </option>
+                        )}
+                      </>
+                      // </React.Fragment>
+                    ))}
+                  </CustomInput>
                 </FormGroup>
+                <FormGroup className="my-2">
+                  <Label for="featured_img">Featured Image</Label>
+                  <div className="clearfix" />
+                  <Button.Ripple
+                    color="primary"
+                    onClick={() => {
+                      setIsSingle(true);
+                      setIsBanner(false);
+                      setModalShow(true);
+                    }}
+                  >
+                    Add Featured Image
+                  </Button.Ripple>
+                </FormGroup>
+                <Row>
+                  <Col sm={3}>
+                    <div className="img-preview-wrapper preview-small">
+                      <img src={videoData?.image} alt="" />
+                    </div>
+                  </Col>
+                </Row>
               </Form>
             )}
           </Formik>
         </CardBody>
       </Card>
+      <GalleryModal
+        open={modalShow}
+        handleClose={() => setModalShow(false)}
+        handleImageSelect={handleImageSelect}
+        data={imagesData}
+        refreshData={() => getGalleryImages()}
+      />
 
       {/* *********************
       ARABIC VERSION FIELDS
       ********************* */}
       {/* {isEdit && ( */}
-        {/* // <Card style={{ background: '#f0f0f0', boxShadow: `0px 4px 25px 0px rgba(230, 85, 80, 0.4)` }}> */}
-        <Card style={{ background: "rgba(230,85,80,.15)" }}>
-          <CardBody>
-            <div className="arabic-form">
-              <h3>Arabic Fields</h3>
-              <Formik
-                initialValues={{
-                  required: "",
-                  email: "",
-                  url: "",
-                  number: "",
-                  date: "",
-                  minlength: "",
-                  maxlength: "",
-                }}
-                validationSchema={formSchema}
-              >
-                {({ errors, touched }) => (
-                  <Form>
-                    <FormGroup className="mb-1">
-                      <Label for="title">Title</Label>
-                      <Field
-                        name="title"
-                        id="title"
-                        onChange={handleArabicFieldChange}
-                        value={videoData.arabic?.title}
-                        className={`form-control`}
-                      />
-                    </FormGroup>
-                  </Form>
-                )}
-              </Formik>
-            </div>
-          </CardBody>
-        </Card>
+      {/* // <Card style={{ background: '#f0f0f0', boxShadow: `0px 4px 25px 0px rgba(230, 85, 80, 0.4)` }}> */}
+      <Card style={{ background: "rgba(230,85,80,.15)" }}>
+        <CardBody>
+          <div className="arabic-form">
+            <h3>Arabic Fields</h3>
+            <Formik
+              initialValues={{
+                required: "",
+                email: "",
+                url: "",
+                number: "",
+                date: "",
+                minlength: "",
+                maxlength: "",
+              }}
+              validationSchema={formSchema}
+            >
+              {({ errors, touched }) => (
+                <Form>
+                  <FormGroup className="mb-1">
+                    <Label for="title">Title</Label>
+                    <Field
+                      name="title"
+                      id="title"
+                      onChange={handleArabicFieldChange}
+                      value={videoData.arabic?.title}
+                      className={`form-control`}
+                    />
+                  </FormGroup>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </CardBody>
+      </Card>
       {/* )} */}
 
       <Card>
