@@ -20,10 +20,9 @@ import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import "./Gallery.scss";
 import UpdateGalleryDialog from "./UpdateGalleryDialog";
-import { API } from "../../../http/API"
+import { API } from "../../../http/API";
 
 const Gallery = () => {
-
   const [showEditBox, setToggle] = useState(false);
   const [selectedImage, setSelectedImage] = useState();
 
@@ -44,18 +43,22 @@ const Gallery = () => {
   });
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const handelEditImage = (image) => {
     setToggle(true);
     setSelectedImage(image);
-  }
+  };
 
   const handleImageDelete = (photoKey) => {
     // let fileName = photoKey.split("album3%2F")?.[1];
@@ -73,12 +76,14 @@ const Gallery = () => {
     //     alert("Image Deleted");
     //   })
     //   .catch((err) => console.error(err));
-    
-    API.delete(`/uploads`).then((response) => {
-      // axios.delete(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+
+    API.delete(`/uploads`)
+      .then((response) => {
+        // axios.delete(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         getGalleryImages();
         alert("Image Deleted");
-      }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -91,8 +96,10 @@ const Gallery = () => {
               cols={0.4}
               key={tile.imageKey + index}
             >
-              <img src={process.env.REACT_APP_IMAGE_BASE_URL + tile.image} alt={""}
-                onClick={() => handelEditImage(tile.image)}
+              <img
+                src={process.env.REACT_APP_IMAGE_BASE_URL + tile.avatar}
+                alt={""}
+                onClick={() => handelEditImage(tile.avatar)}
               />
               <GridListTileBar
                 title={<small>{tile.imageKey}</small>}
@@ -100,7 +107,7 @@ const Gallery = () => {
                 actionIcon={
                   <IconButton
                     aria-label={`info about`}
-                    onClick={() => handleImageDelete(tile.image)}
+                    onClick={() => handleImageDelete(tile.avatar)}
                     className=""
                   >
                     <DeleteRounded
@@ -118,7 +125,7 @@ const Gallery = () => {
       <Box>
         <UpdateGalleryDialog
           open={showEditBox}
-          onClose={() => setToggle( false )}
+          onClose={() => setToggle(false)}
           image={selectedImage}
         />
       </Box>
