@@ -50,7 +50,10 @@ class FirstTimeFatherList extends React.Component {
                 className="img-fluid rounded-circle"
                 height="36"
                 width="36"
-                src={row.widget_content.featured_img}
+                src={
+                  process.env.REACT_APP_IMAGE_BASE_URL +
+                  row.widget_content.featured_img
+                }
                 alt={row.widget_content.featured_img}
               />
             </div>

@@ -79,12 +79,16 @@ const SubCategoryForm = () => {
   });
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleImageSelect = (e, index) => {
@@ -312,7 +316,13 @@ const SubCategoryForm = () => {
                           <div className="clearfix" />
                           <div className="img-preview-wrapper">
                             {thumbnailPreview !== "" && (
-                              <img src={thumbnailPreview} alt="" />
+                              <img
+                                src={
+                                  process.env.REACT_APP_IMAGE_BASE_URL +
+                                  thumbnailPreview
+                                }
+                                alt=""
+                              />
                             )}
                           </div>
                           <Button.Ripple
@@ -333,7 +343,13 @@ const SubCategoryForm = () => {
                           <div className="clearfix" />
                           <div className="img-preview-wrapper">
                             {bannerThumbnailPreview !== "" && (
-                              <img src={bannerThumbnailPreview} alt="" />
+                              <img
+                                src={
+                                  process.env.REACT_APP_IMAGE_BASE_URL +
+                                  bannerThumbnailPreview
+                                }
+                                alt=""
+                              />
                             )}
                           </div>
                           <Button.Ripple
@@ -354,7 +370,10 @@ const SubCategoryForm = () => {
                       {selectedImages?.map((x, index) => (
                         <Col sm={3} key={index}>
                           <div className="img-preview-wrapper preview-small">
-                            <img src={x} alt="" />
+                            <img
+                              src={process.env.REACT_APP_IMAGE_BASE_URL + x}
+                              alt=""
+                            />
                           </div>
                         </Col>
                       ))}

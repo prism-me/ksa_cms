@@ -24,7 +24,6 @@ import GalleryModal from "../../gallery-modal/GalleryModal";
 import { API } from "../../../../http/API";
 import { connect } from "react-redux";
 
-
 const formSchema = Yup.object().shape({
   required: Yup.string().required("Required"),
 });
@@ -74,7 +73,6 @@ const mapStateToProps = (props) => {
     dataLog: props.auth,
   };
 };
-
 
 const ArticleForm = (props) => {
   const { id } = useParams();
@@ -158,12 +156,16 @@ const ArticleForm = (props) => {
   }, []);
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleImageSelect = (e, index) => {
@@ -509,7 +511,13 @@ const ArticleForm = (props) => {
                       <div className="clearfix" />
                       <div className="img-preview-wrapper">
                         {articleData.banner_img !== "" && (
-                          <img src={articleData.banner_img} alt="" />
+                          <img
+                            src={
+                              process.env.REACT_APP_IMAGE_BASE_URL +
+                              articleData.banner_img
+                            }
+                            alt=""
+                          />
                         )}
                       </div>
                       <Button.Ripple
@@ -530,7 +538,13 @@ const ArticleForm = (props) => {
                       <div className="clearfix" />
                       <div className="img-preview-wrapper">
                         {articleData.featured_img !== "" && (
-                          <img src={articleData.featured_img} alt="" />
+                          <img
+                            src={
+                              process.env.REACT_APP_IMAGE_BASE_URL +
+                              articleData.featured_img
+                            }
+                            alt=""
+                          />
                         )}
                       </div>
                       <Button.Ripple
@@ -591,7 +605,14 @@ const ArticleForm = (props) => {
                                     <div className="clearfix" />
                                     <div className="img-preview-wrapper">
                                       {x.image !== "" && (
-                                        <img src={x.image} alt="" />
+                                        <img
+                                          src={
+                                            process.env
+                                              .REACT_APP_IMAGE_BASE_URL +
+                                            x.image
+                                          }
+                                          alt=""
+                                        />
                                       )}
                                     </div>
                                     <Button.Ripple
@@ -908,4 +929,3 @@ const ArticleForm = (props) => {
 
 // export default ArticleForm;
 export default connect(mapStateToProps)(ArticleForm);
-

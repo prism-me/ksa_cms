@@ -21,7 +21,6 @@ import GalleryModal from "../../gallery-modal/GalleryModal";
 import { API } from "../../../../http/API";
 import { connect } from "react-redux";
 
-
 const formSchema = Yup.object().shape({
   required: Yup.string().required("Required"),
 });
@@ -56,7 +55,6 @@ const mapStateToProps = (props) => {
     dataLog: props.auth,
   };
 };
-
 
 const PigeonLogo = (props) => {
   const [pigeonLogo, setPigeonLogo] = useState({ ...initialObj });
@@ -116,14 +114,17 @@ const PigeonLogo = (props) => {
       .catch((err) => console.log(err));
   }, []);
 
-
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
   //!-------handleSelect s3 Images-----------
   const handleImageSelect = (e, index) => {
@@ -233,7 +234,7 @@ const PigeonLogo = (props) => {
             {({ errors, touched }) => (
               <Form>
                 {/* //! **************English Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -274,9 +275,13 @@ const PigeonLogo = (props) => {
                                   <Label for="featured_img">Pigeon Logo</Label>
                                   <div className="clearfix" />
                                   <div className="img-preview-wrapper">
-                                    {pigeonLogo?.widget_content?.logo !== "" && (
+                                    {pigeonLogo?.widget_content?.logo !==
+                                      "" && (
                                       <img
-                                        src={pigeonLogo?.widget_content?.logo}
+                                        src={
+                                          process.env.REACT_APP_IMAGE_BASE_URL +
+                                          pigeonLogo?.widget_content?.logo
+                                        }
                                         alt=""
                                       />
                                     )}
@@ -299,7 +304,7 @@ const PigeonLogo = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>
@@ -365,11 +370,11 @@ const PigeonLogo = (props) => {
       //! **************************************** */}
 
       <Card className="arabic-pigeon-logo-form">
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <CardHeader>
             <CardTitle>Arabic Pigeon Logo Form</CardTitle>
           </CardHeader>
-        }
+        )}
         <CardBody>
           <Formik
             initialValues={{
@@ -380,7 +385,7 @@ const PigeonLogo = (props) => {
             {({ errors, touched }) => (
               <Form>
                 {/* //! **************Arabic Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -397,7 +402,9 @@ const PigeonLogo = (props) => {
                                 name="title"
                                 id="title"
                                 onChange={handleArabicOnChange}
-                                value={pigeonLogo?.widget_content?.arabic?.title}
+                                value={
+                                  pigeonLogo?.widget_content?.arabic?.title
+                                }
                                 className={`form-control`}
                               />
                             </FormGroup>
@@ -410,7 +417,8 @@ const PigeonLogo = (props) => {
                                       (CKEDITOR.disableAutoInline = true)
                                     }
                                     data={
-                                      pigeonLogo?.widget_content?.arabic?.content
+                                      pigeonLogo?.widget_content?.arabic
+                                        ?.content
                                     }
                                     onChange={(e) =>
                                       handleArabicEditor(e.editor.getData())
@@ -424,7 +432,7 @@ const PigeonLogo = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Arabic Meta Tag Details</CardTitle>
@@ -505,4 +513,3 @@ const PigeonLogo = (props) => {
 
 // export default PigeonLogo;
 export default connect(mapStateToProps)(PigeonLogo);
-

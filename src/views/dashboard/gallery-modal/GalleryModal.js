@@ -59,7 +59,7 @@ export default function GalleryDialog(props) {
   const handleClick = (event) => {
     event.preventDefault();
 
-    console.log(currentFiles,"currentFiles");
+    console.log(currentFiles, "currentFiles");
 
     // const config = {
     //   bucketName: "pigeon-gallery",
@@ -87,23 +87,24 @@ export default function GalleryDialog(props) {
     // });
 
     let imagesFormData = new FormData();
-    currentFiles.forEach(x => {
-        imagesFormData.append("images[]", x.image);
-        imagesFormData.append("data[]", JSON.stringify(x))
-    })
+    currentFiles.forEach((x) => {
+      imagesFormData.append("images[]", x.image);
+      imagesFormData.append("data[]", JSON.stringify(x));
+    });
     API.post(`/uploads`, imagesFormData, {
-    // axios.post(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`, imagesFormData, {
-        headers: {
-            'Content-Type': `multipart/form-data; boundary=${imagesFormData._boundary}`,
-        }
-    }).then(response => {
+      // axios.post(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`, imagesFormData, {
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${imagesFormData._boundary}`,
+      },
+    })
+      .then((response) => {
         if (response.status === 200) {
-            alert("Files Uploaded");
-            setCurrentFiles([]);
-            props.refreshData();
+          alert("Files Uploaded");
+          setCurrentFiles([]);
+          props.refreshData();
         }
-    }).catch(err => alert("Something went wrong"));
-    
+      })
+      .catch((err) => alert("Something went wrong"));
   };
 
   //!-------------------------------------------------------------------
@@ -286,7 +287,11 @@ export default function GalleryDialog(props) {
           <div className="search-bucket">
             <Label>Search Images</Label>
             <FormGroup>
-              <Input type="text" onChange={handleSearch} placeholder="Search images..." />
+              <Input
+                type="text"
+                onChange={handleSearch}
+                placeholder="Search images..."
+              />
             </FormGroup>
           </div>
           <div className="d-flex flex-wrap gallery-grid">
@@ -320,7 +325,7 @@ export default function GalleryDialog(props) {
                             height: "100%",
                             objectFit: "cover",
                           }}
-                          src={x.avatar}
+                          src={process.env.REACT_APP_IMAGE_BASE_URL + x.avatar}
                           alt=""
                         />
                         <p
@@ -352,7 +357,7 @@ export default function GalleryDialog(props) {
                         <img
                           className="img-thumbnail"
                           width="100%"
-                          src={x.avatar}
+                          src={process.env.REACT_APP_IMAGE_BASE_URL + x.avatar}
                           alt=""
                           style={{
                             height: "100%",

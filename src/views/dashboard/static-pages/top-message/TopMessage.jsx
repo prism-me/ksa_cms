@@ -119,14 +119,17 @@ const TopMessage = (props) => {
       .catch((err) => console.log(err));
   }, []);
 
-
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
   //!-------handleSelect s3 Images-----------
   const handleImageSelect = (e, index) => {
@@ -234,7 +237,7 @@ const TopMessage = (props) => {
             {({ errors, touched }) => (
               <Form>
                 {/* //! **************English Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -246,7 +249,9 @@ const TopMessage = (props) => {
                         <UncontrolledCollapse toggler="#item-1">
                           <CardBody>
                             <FormGroup className="mb-1">
-                              <Label for="first_title">First Section Title</Label>
+                              <Label for="first_title">
+                                First Section Title
+                              </Label>
                               <Field
                                 name="first_title"
                                 id="first_title"
@@ -283,9 +288,13 @@ const TopMessage = (props) => {
                                   <Label for="featured_img">Image</Label>
                                   <div className="clearfix" />
                                   <div className="img-preview-wrapper">
-                                    {topMessage?.widget_content?.image !== "" && (
+                                    {topMessage?.widget_content?.image !==
+                                      "" && (
                                       <img
-                                        src={topMessage?.widget_content?.image}
+                                        src={
+                                          process.env.REACT_APP_IMAGE_BASE_URL +
+                                          topMessage?.widget_content?.image
+                                        }
                                         alt=""
                                       />
                                     )}
@@ -347,7 +356,7 @@ const TopMessage = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>
@@ -412,11 +421,11 @@ const TopMessage = (props) => {
       //? ***************Arabic Version*************
       //! **************************************** */}
       <Card className="arabic-top-message-form">
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <CardHeader>
             <CardTitle>Top Arabic Message Form</CardTitle>
           </CardHeader>
-        }
+        )}
         <CardBody>
           <Formik
             initialValues={{
@@ -427,7 +436,7 @@ const TopMessage = (props) => {
             {({ errors, touched }) => (
               <Form>
                 {/* //! **************Arabic Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -439,13 +448,16 @@ const TopMessage = (props) => {
                         <UncontrolledCollapse toggler="#item-1">
                           <CardBody>
                             <FormGroup className="mb-1">
-                              <Label for="first_title">First Section Title</Label>
+                              <Label for="first_title">
+                                First Section Title
+                              </Label>
                               <Field
                                 name="first_title"
                                 id="first_title"
                                 onChange={handleArabicOnChange}
                                 value={
-                                  topMessage?.widget_content?.arabic?.first_title
+                                  topMessage?.widget_content?.arabic
+                                    ?.first_title
                                 }
                                 className={`form-control`}
                               />
@@ -521,7 +533,7 @@ const TopMessage = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>
@@ -594,4 +606,3 @@ const TopMessage = (props) => {
 
 // export default TopMessage;
 export default connect(mapStateToProps)(TopMessage);
-

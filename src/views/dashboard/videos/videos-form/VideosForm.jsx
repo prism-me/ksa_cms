@@ -248,7 +248,13 @@ const VideoForm = (props) => {
                 <Row>
                   <Col sm={3}>
                     <div className="img-preview-wrapper preview-small">
-                      <img src={videoData?.image} alt="" />
+                      <img
+                        src={
+                          process.env.REACT_APP_IMAGE_BASE_URL +
+                          videoData?.image
+                        }
+                        alt=""
+                      />
                     </div>
                   </Col>
                 </Row>

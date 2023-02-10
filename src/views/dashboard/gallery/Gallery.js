@@ -91,7 +91,7 @@ const Gallery = () => {
               cols={0.4}
               key={tile.imageKey + index}
             >
-              <img src={tile.image} alt={""}
+              <img src={process.env.REACT_APP_IMAGE_BASE_URL + tile.image} alt={""}
                 onClick={() => handelEditImage(tile.image)}
               />
               <GridListTileBar

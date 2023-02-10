@@ -24,7 +24,6 @@ import GalleryModal from "../gallery-modal/GalleryModal";
 import { API } from "../../../http/API";
 import { connect } from "react-redux";
 
-
 const formSchema = Yup.object().shape({
   required: Yup.string().required("Required"),
 });
@@ -123,7 +122,7 @@ const ArticleForm = (props) => {
       setIsEdit(true);
       API.get(`/articles/${id}`)
         .then((res) => {
-          console.log("useEffect 1st ::", res)
+          console.log("useEffect 1st ::", res);
           if (!res.data.arabic) {
             res.data.arabic = initialObj.arabic;
           }
@@ -158,12 +157,16 @@ const ArticleForm = (props) => {
   }, []);
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleImageSelect = (e, index) => {
@@ -248,7 +251,7 @@ const ArticleForm = (props) => {
       API.get(`/articles/${id}`)
         .then((res) => {
           // debugger;
-          console.log("useEffect 2nd ::", res)
+          console.log("useEffect 2nd ::", res);
           if (!res.data.arabic) {
             res.data.arabic = initialObj.arabic;
           }
@@ -451,7 +454,7 @@ const ArticleForm = (props) => {
           >
             {({ errors, touched }) => (
               <Form>
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup>
                     <Label for="category_id">Select Category</Label>
                     <CustomInput
@@ -461,7 +464,7 @@ const ArticleForm = (props) => {
                       // value={articleData?.widget_content?.category_id}
                       value={articleData.category_id}
                       onChange={handleCategorySelect}
-                    // onChange={handleCategorySelect}
+                      // onChange={handleCategorySelect}
                     >
                       <option value="all">Select Category</option>
                       {articleCategories?.map((x) => (
@@ -471,8 +474,8 @@ const ArticleForm = (props) => {
                       ))}
                     </CustomInput>
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="mb-1">
                     <Label for="title">Title</Label>
                     <Field
@@ -483,8 +486,8 @@ const ArticleForm = (props) => {
                       className={`form-control`}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <FormGroup className="mb-1">
                     <Label for="route">Route</Label>
                     <Field
@@ -495,8 +498,8 @@ const ArticleForm = (props) => {
                       className={`form-control`}
                     />
                   </FormGroup>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div>
                     <Label for="exert">Exert</Label>
                     <CKEditor
@@ -509,8 +512,8 @@ const ArticleForm = (props) => {
                       }}
                     />
                   </div>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Row>
                     <Col sm={6}>
                       <FormGroup className="">
@@ -518,7 +521,13 @@ const ArticleForm = (props) => {
                         <div className="clearfix" />
                         <div className="img-preview-wrapper">
                           {articleData.banner_img !== "" && (
-                            <img src={articleData.banner_img} alt="" />
+                            <img
+                              src={
+                                process.env.REACT_APP_IMAGE_BASE_URL +
+                                articleData.banner_img
+                              }
+                              alt=""
+                            />
                           )}
                         </div>
                         <Button.Ripple
@@ -539,7 +548,13 @@ const ArticleForm = (props) => {
                         <div className="clearfix" />
                         <div className="img-preview-wrapper">
                           {articleData.featured_img !== "" && (
-                            <img src={articleData.featured_img} alt="" />
+                            <img
+                              src={
+                                process.env.REACT_APP_IMAGE_BASE_URL +
+                                articleData.featured_img
+                              }
+                              alt=""
+                            />
                           )}
                         </div>
                         <Button.Ripple
@@ -556,8 +571,8 @@ const ArticleForm = (props) => {
                       </FormGroup>
                     </Col>
                   </Row>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Row>
                     {articleData?.content?.map((x, index) => (
                       <div
@@ -580,7 +595,9 @@ const ArticleForm = (props) => {
                                 <Row>
                                   <Col sm={9}>
                                     <div>
-                                      <Label for="description">Description</Label>
+                                      <Label for="description">
+                                        Description
+                                      </Label>
                                       <CKEditor
                                         onBeforeLoad={(CKEDITOR) =>
                                           (CKEDITOR.disableAutoInline = true)
@@ -602,7 +619,14 @@ const ArticleForm = (props) => {
                                       <div className="clearfix" />
                                       <div className="img-preview-wrapper">
                                         {x.image !== "" && (
-                                          <img src={x.image} alt="" />
+                                          <img
+                                            src={
+                                              process.env
+                                                .REACT_APP_IMAGE_BASE_URL +
+                                              x.image
+                                            }
+                                            alt=""
+                                          />
                                         )}
                                       </div>
                                       <Button.Ripple
@@ -623,7 +647,10 @@ const ArticleForm = (props) => {
                                 </Row>
                                 <Col sm={12}>
                                   <div
-                                    style={{ height: "100%", cursor: "pointer" }}
+                                    style={{
+                                      height: "100%",
+                                      cursor: "pointer",
+                                    }}
                                     className="d-flex align-items-center justify-content-end"
                                   >
                                     <DeleteOutlined
@@ -639,9 +666,8 @@ const ArticleForm = (props) => {
                       </div>
                     ))}
                   </Row>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
-
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Button.Ripple
                     onClick={addParagraph}
                     color="danger"
@@ -651,7 +677,7 @@ const ArticleForm = (props) => {
                   >
                     Add Next Paragraph
                   </Button.Ripple>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>
@@ -749,7 +775,7 @@ const ArticleForm = (props) => {
                         ))}
                       </CustomInput>
                     </FormGroup> */}
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <FormGroup className="mb-1">
                         <Label for="title">Title</Label>
                         <Field
@@ -760,8 +786,8 @@ const ArticleForm = (props) => {
                           className={`form-control`}
                         />
                       </FormGroup>
-                    }
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                    )}
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <div>
                         <Label for="exert">Exert</Label>
                         <CKEditor
@@ -774,8 +800,8 @@ const ArticleForm = (props) => {
                           }}
                         />
                       </div>
-                    }
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                    )}
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <CardBody>
                         <Row>
                           {console.log("articleData ::", articleData)}
@@ -845,9 +871,8 @@ const ArticleForm = (props) => {
                           ))}
                         </Row>
                       </CardBody>
-                    }
-                    {props.dataLog.login.loggedInUser.role !== 'seo' &&
-
+                    )}
+                    {props.dataLog.login.loggedInUser.role !== "seo" && (
                       <Button.Ripple
                         onClick={addArabicParagraph}
                         color="danger"
@@ -857,7 +882,7 @@ const ArticleForm = (props) => {
                       >
                         Add Next Paragraph
                       </Button.Ripple>
-                    }
+                    )}
                     <Card className="mt-3">
                       <CardHeader>
                         <CardTitle>Arabic Meta Tag Details</CardTitle>
@@ -931,7 +956,6 @@ const ArticleForm = (props) => {
 
 // export default ArticleForm;
 export default connect(mapStateToProps)(ArticleForm);
-
 
 // let arabicContents = [];
 // res.data.content.forEach(x=>{

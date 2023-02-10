@@ -53,7 +53,7 @@ class DataTableCustom extends React.Component {
             >
               <img
                 className="img-fluid rounded-circle"
-                src={row.featured_img}
+                src={process.env.REACT_APP_IMAGE_BASE_URL + row.featured_img}
                 alt={row.name}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
@@ -221,7 +221,6 @@ class DataTableCustom extends React.Component {
   };
   //!-------Handle Delete------
   handleDelete = (route) => {
-    
     API.delete(`/products/${route}`)
       .then((response) => {
         if (response.status === 200 || response.status === 201) {

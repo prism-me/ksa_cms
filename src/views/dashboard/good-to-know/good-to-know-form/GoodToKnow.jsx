@@ -80,12 +80,16 @@ const GoodToKnow = () => {
   });
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleImageSelect = (e, index) => {
@@ -219,7 +223,13 @@ const GoodToKnow = () => {
                       <div className="clearfix" />
                       <div className="img-preview-wrapper">
                         {goodToKnow.featured_img !== "" && (
-                          <img src={goodToKnow.featured_img} alt="" />
+                          <img
+                            src={
+                              process.env.REACT_APP_IMAGE_BASE_URL +
+                              goodToKnow.featured_img
+                            }
+                            alt=""
+                          />
                         )}
                       </div>
                       <Button.Ripple

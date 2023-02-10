@@ -24,7 +24,6 @@ import GalleryModal from "../../gallery-modal/GalleryModal";
 import { API } from "../../../../http/API";
 import { connect } from "react-redux";
 
-
 const formSchema = Yup.object().shape({
   required: Yup.string().required("Required"),
 });
@@ -35,7 +34,7 @@ const initialObj = {
   cms_route: "",
   slug: "",
   description: "",
-  exert:"",
+  exert: "",
   banner_img: "",
   featured_img: "",
   meta_title: "",
@@ -44,7 +43,7 @@ const initialObj = {
   arabic: {
     title: "",
     description: "",
-    exert:"",
+    exert: "",
     route: "",
     meta_title: "",
     meta_details: "",
@@ -129,12 +128,16 @@ const BlogGridForm = (props) => {
   }, []);
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleImageSelect = (e, index) => {
@@ -374,7 +377,13 @@ const BlogGridForm = (props) => {
                     <div className="clearfix" />
                     <div className="img-preview-wrapper">
                       {blogData.banner_img !== "" && (
-                        <img src={blogData.banner_img} alt="" />
+                        <img
+                          src={
+                            process.env.REACT_APP_IMAGE_BASE_URL +
+                            blogData.banner_img
+                          }
+                          alt=""
+                        />
                       )}
                     </div>
                     <Button.Ripple
@@ -395,7 +404,13 @@ const BlogGridForm = (props) => {
                     <div className="clearfix" />
                     <div className="img-preview-wrapper">
                       {blogData.featured_img !== "" && (
-                        <img src={blogData.featured_img} alt="" />
+                        <img
+                          src={
+                            process.env.REACT_APP_IMAGE_BASE_URL +
+                            blogData.featured_img
+                          }
+                          alt=""
+                        />
                       )}
                     </div>
                     <Button.Ripple
@@ -422,9 +437,7 @@ const BlogGridForm = (props) => {
                       }
                       data={blogData.description}
                       onChange={(e) => {
-                        handleEditor(
-                          e.editor.getData(),
-                        );
+                        handleEditor(e.editor.getData());
                       }}
                     />
                   </div>
@@ -539,9 +552,7 @@ const BlogGridForm = (props) => {
                             }
                             data={blogData.arabic.description}
                             onChange={(e) => {
-                              handleArabicEditor(
-                                e.editor.getData(),
-                              );
+                              handleArabicEditor(e.editor.getData());
                             }}
                           />
                         </div>
@@ -574,9 +585,7 @@ const BlogGridForm = (props) => {
                           id="meta_details"
                           rows="3"
                           onChange={handleArabicMetaOnChange}
-                          value={
-                            blogData?.arabic?.meta_details
-                          }
+                          value={blogData?.arabic?.meta_details}
                         />
                       </div>
                       <div>
@@ -589,9 +598,7 @@ const BlogGridForm = (props) => {
                           id="schema_markup"
                           rows="3"
                           onChange={handleArabicMetaOnChange}
-                          value={
-                            blogData?.arabic?.schema_markup
-                          }
+                          value={blogData?.arabic?.schema_markup}
                         />
                       </div>
                     </CardBody>
@@ -621,7 +628,6 @@ const BlogGridForm = (props) => {
 
 // export default ArticleForm;
 export default connect(mapStateToProps)(BlogGridForm);
-
 
 // let arabicContents = [];
 // res.data.content.forEach(x=>{

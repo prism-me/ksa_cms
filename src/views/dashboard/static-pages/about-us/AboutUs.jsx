@@ -82,7 +82,6 @@ const mapStateToProps = (props) => {
   };
 };
 
-
 const AboutUs = (props) => {
   const { id } = useParams();
   const [aboutUsData, setAboutUsData] = useState({ ...initialObj });
@@ -160,12 +159,16 @@ const AboutUs = (props) => {
   });
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   //!-------handleSelect s3 Images-----------
@@ -375,7 +378,7 @@ const AboutUs = (props) => {
             {({ errors, touched }) => (
               <Form>
                 {/* //! **************First Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -407,14 +410,15 @@ const AboutUs = (props) => {
                                   <div className="img-preview-wrapper">
                                     {aboutUsData?.widget_content?.sectionOne
                                       ?.banner_image !== "" && (
-                                        <img
-                                          src={
-                                            aboutUsData?.widget_content?.sectionOne
-                                              ?.banner_image
-                                          }
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_IMAGE_BASE_URL +
+                                          aboutUsData?.widget_content
+                                            ?.sectionOne?.banner_image
+                                        }
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                   <Button.Ripple
                                     color="primary"
@@ -431,19 +435,22 @@ const AboutUs = (props) => {
                               </Col>
                               <Col sm={6}>
                                 <FormGroup className="">
-                                  <Label for="featured_img">Featured Image</Label>
+                                  <Label for="featured_img">
+                                    Featured Image
+                                  </Label>
                                   <div className="clearfix" />
                                   <div className="img-preview-wrapper">
                                     {aboutUsData?.widget_content?.sectionOne
                                       ?.featured_image !== "" && (
-                                        <img
-                                          src={
-                                            aboutUsData?.widget_content?.sectionOne
-                                              ?.featured_image
-                                          }
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_IMAGE_BASE_URL +
+                                          aboutUsData?.widget_content
+                                            ?.sectionOne?.featured_image
+                                        }
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                   <Button.Ripple
                                     color="primary"
@@ -481,9 +488,9 @@ const AboutUs = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 {/* //! **************Second Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -547,14 +554,15 @@ const AboutUs = (props) => {
                                   <div className="img-preview-wrapper">
                                     {aboutUsData?.widget_content?.sectionTwo
                                       ?.video_thumbnail !== "" && (
-                                        <img
-                                          src={
-                                            aboutUsData?.widget_content?.sectionTwo
-                                              ?.video_thumbnail
-                                          }
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_IMAGE_BASE_URL +
+                                          aboutUsData?.widget_content
+                                            ?.sectionTwo?.video_thumbnail
+                                        }
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                   <Button.Ripple
                                     color="primary"
@@ -576,9 +584,9 @@ const AboutUs = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 {/* //! **************Third Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -597,12 +605,12 @@ const AboutUs = (props) => {
                                 id="title"
                                 onChange={handleOnChangeThree}
                                 value={
-                                  aboutUsData?.widget_content?.sectionThree?.title
+                                  aboutUsData?.widget_content?.sectionThree
+                                    ?.title
                                 }
                                 className={`form-control`}
                               />
                             </FormGroup>
-
                             <Row>
                               <Col sm={12}>
                                 <div>
@@ -627,7 +635,7 @@ const AboutUs = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>
@@ -705,7 +713,7 @@ const AboutUs = (props) => {
             {({ errors, touched }) => (
               <Form>
                 {/* //! **************First Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -724,8 +732,8 @@ const AboutUs = (props) => {
                                 id="title"
                                 onChange={handleArabicOnChange}
                                 value={
-                                  aboutUsData?.widget_content?.arabic?.sectionOne
-                                    ?.title
+                                  aboutUsData?.widget_content?.arabic
+                                    ?.sectionOne?.title
                                 }
                                 className={`form-control`}
                               />
@@ -754,9 +762,9 @@ const AboutUs = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 {/* //! **************Second Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -775,8 +783,8 @@ const AboutUs = (props) => {
                                 id="title"
                                 onChange={handleArabicOnChangeTwo}
                                 value={
-                                  aboutUsData?.widget_content?.arabic?.sectionTwo
-                                    ?.title
+                                  aboutUsData?.widget_content?.arabic
+                                    ?.sectionTwo?.title
                                 }
                                 className={`form-control`}
                               />
@@ -806,9 +814,9 @@ const AboutUs = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 {/* //! **************Third Section*************** */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="variation-row-wrapper mb-2">
                     <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                       <Card>
@@ -847,7 +855,9 @@ const AboutUs = (props) => {
                                         ?.sectionThree?.content
                                     }
                                     onChange={(e) =>
-                                      handleArabicEditorThree(e.editor.getData())
+                                      handleArabicEditorThree(
+                                        e.editor.getData()
+                                      )
                                     }
                                   />
                                 </div>
@@ -858,7 +868,7 @@ const AboutUs = (props) => {
                       </Card>
                     </div>
                   </div>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>

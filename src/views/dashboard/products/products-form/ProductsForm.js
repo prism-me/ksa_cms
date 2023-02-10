@@ -1541,7 +1541,11 @@ const ProductsForm = (props) => {
                                                     }}
                                                   >
                                                     <img
-                                                      src={x.image}
+                                                      src={
+                                                        process.env
+                                                          .REACT_APP_IMAGE_BASE_URL +
+                                                        x.image
+                                                      }
                                                       alt=""
                                                       style={{
                                                         width: "100%",
@@ -1776,7 +1780,13 @@ const ProductsForm = (props) => {
                             <div className="clearfix" />
                             <div className="img-preview-wrapper">
                               {thumbnailPreview !== "" && (
-                                <img src={thumbnailPreview} alt="" />
+                                <img
+                                  src={
+                                    process.env.REACT_APP_IMAGE_BASE_URL +
+                                    thumbnailPreview
+                                  }
+                                  alt=""
+                                />
                               )}
                             </div>
                             <Button.Ripple
@@ -1799,7 +1809,13 @@ const ProductsForm = (props) => {
                             <div className="clearfix" />
                             <div className="img-preview-wrapper">
                               {bannerThumbnailPreview !== "" && (
-                                <img src={bannerThumbnailPreview} alt="" />
+                                <img
+                                  src={
+                                    process.env.REACT_APP_IMAGE_BASE_URL +
+                                    bannerThumbnailPreview
+                                  }
+                                  alt=""
+                                />
                               )}
                             </div>
                             <Button.Ripple
@@ -1956,7 +1972,11 @@ const ProductsForm = (props) => {
                                                 }}
                                               >
                                                 <img
-                                                  src={x.image}
+                                                  src={
+                                                    process.env
+                                                      .REACT_APP_IMAGE_BASE_URL +
+                                                    x.image
+                                                  }
                                                   alt=""
                                                   style={{
                                                     width: "100%",
@@ -2159,7 +2179,13 @@ const ProductsForm = (props) => {
                         <div className="clearfix" />
                         <div className="img-preview-wrapper">
                           {overviewThumbnailPreview !== "" && (
-                            <img src={overviewThumbnailPreview} alt="" />
+                            <img
+                              src={
+                                process.env.REACT_APP_IMAGE_BASE_URL +
+                                overviewThumbnailPreview
+                              }
+                              alt=""
+                            />
                           )}
                         </div>
                         <Button.Ripple
@@ -2182,7 +2208,13 @@ const ProductsForm = (props) => {
                         <div className="clearfix" />
                         <div className="img-preview-wrapper">
                           {featuresThumbnailPreview !== "" && (
-                            <img src={featuresThumbnailPreview} alt="" />
+                            <img
+                              src={
+                                process.env.REACT_APP_IMAGE_BASE_URL +
+                                featuresThumbnailPreview
+                              }
+                              alt=""
+                            />
                           )}
                         </div>
                         <Button.Ripple
@@ -2262,7 +2294,9 @@ const ProductsForm = (props) => {
                               <Col sm={4}>
                                 <div style={{ width: "100%" }}>
                                   <img
-                                    src={x}
+                                    src={
+                                      process.env.REACT_APP_IMAGE_BASE_URL + x
+                                    }
                                     alt=""
                                     style={{
                                       width: "100%",
@@ -2715,7 +2749,11 @@ const ProductsForm = (props) => {
                                                         }}
                                                       >
                                                         <img
-                                                          src={x.image}
+                                                          src={
+                                                            process.env
+                                                              .REACT_APP_IMAGE_BASE_URL +
+                                                            x.image
+                                                          }
                                                           alt=""
                                                           style={{
                                                             width: "100%",
@@ -2920,7 +2958,11 @@ const ProductsForm = (props) => {
                                               }}
                                             >
                                               <img
-                                                src={x.image}
+                                                src={
+                                                  process.env
+                                                    .REACT_APP_IMAGE_BASE_URL +
+                                                  x.image
+                                                }
                                                 alt=""
                                                 style={{
                                                   width: "100%",

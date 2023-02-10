@@ -22,7 +22,6 @@ import { DeleteOutlined } from "@material-ui/icons";
 import { API } from "../../../http/API";
 import { connect } from "react-redux";
 
-
 const formSchema = Yup.object().shape({
   required: Yup.string().required("Required"),
 });
@@ -114,9 +113,11 @@ const mapStateToProps = (props) => {
   };
 };
 
-
 const HomeForm = (props) => {
-  console.log("props.loggedInUser.role ::::", props.dataLog.login.loggedInUser.role);
+  console.log(
+    "props.loggedInUser.role ::::",
+    props.dataLog.login.loggedInUser.role
+  );
   const [homeData, setHomeData] = useState({ ...initialObj });
   const [pageData, setPageData] = useState();
   const [isEdit, setIsEdit] = useState(false);
@@ -145,12 +146,16 @@ const HomeForm = (props) => {
   });
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   //!-------handleSelect s3 Images-----------
@@ -523,10 +528,9 @@ const HomeForm = (props) => {
       );
   };
 
-
   return (
     <>
-      {props.dataLog.login.loggedInUser.role !== 'seo' &&
+      {props.dataLog.login.loggedInUser.role !== "seo" && (
         <Card className="home-form">
           <CardHeader>
             <CardTitle>Slider Section</CardTitle>
@@ -558,7 +562,9 @@ const HomeForm = (props) => {
                                 name="title"
                                 id="title"
                                 onChange={handleSliderOneOnChange}
-                                value={homeData?.widget_content?.sliderOne?.title}
+                                value={
+                                  homeData?.widget_content?.sliderOne?.title
+                                }
                                 className={`form-control`}
                               />
                             </FormGroup>
@@ -590,14 +596,15 @@ const HomeForm = (props) => {
                                   <div className="img-preview-wrapper">
                                     {homeData?.widget_content?.sliderOne
                                       ?.image !== "" && (
-                                        <img
-                                          src={
-                                            homeData?.widget_content?.sliderOne
-                                              ?.image
-                                          }
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_IMAGE_BASE_URL +
+                                          homeData?.widget_content?.sliderOne
+                                            ?.image
+                                        }
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                   <Button.Ripple
                                     color="primary"
@@ -637,7 +644,9 @@ const HomeForm = (props) => {
                                 name="title"
                                 id="title"
                                 onChange={handleSliderTwoOnChange}
-                                value={homeData?.widget_content?.sliderTwo?.title}
+                                value={
+                                  homeData?.widget_content?.sliderTwo?.title
+                                }
                                 className={`form-control`}
                               />
                             </FormGroup>
@@ -669,14 +678,15 @@ const HomeForm = (props) => {
                                   <div className="img-preview-wrapper">
                                     {homeData?.widget_content?.sliderTwo
                                       ?.image !== "" && (
-                                        <img
-                                          src={
-                                            homeData?.widget_content?.sliderTwo
-                                              ?.image
-                                          }
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_IMAGE_BASE_URL +
+                                          homeData?.widget_content?.sliderTwo
+                                            ?.image
+                                        }
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                   <Button.Ripple
                                     color="primary"
@@ -736,7 +746,9 @@ const HomeForm = (props) => {
                                         ?.description
                                     }
                                     onChange={(e) =>
-                                      handleSliderThreeEditor(e.editor.getData())
+                                      handleSliderThreeEditor(
+                                        e.editor.getData()
+                                      )
                                     }
                                   />
                                 </div>
@@ -750,14 +762,15 @@ const HomeForm = (props) => {
                                   <div className="img-preview-wrapper">
                                     {homeData?.widget_content?.sliderThree
                                       ?.image !== "" && (
-                                        <img
-                                          src={
-                                            homeData?.widget_content?.sliderThree
-                                              ?.image
-                                          }
-                                          alt=""
-                                        />
-                                      )}
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_IMAGE_BASE_URL +
+                                          homeData?.widget_content?.sliderThree
+                                            ?.image
+                                        }
+                                        alt=""
+                                      />
+                                    )}
                                   </div>
                                   <Button.Ripple
                                     color="primary"
@@ -792,9 +805,9 @@ const HomeForm = (props) => {
             refreshData={() => getGalleryImages()}
           />
         </Card>
-      }
+      )}
       {/* //! **************Slider Bottom Section*************** */}
-      {props.dataLog.login.loggedInUser.role !== 'seo' &&
+      {props.dataLog.login.loggedInUser.role !== "seo" && (
         <Card className="slider-bottom-section">
           <CardHeader>
             <CardTitle>Slider Bottom Section</CardTitle>
@@ -861,9 +874,9 @@ const HomeForm = (props) => {
             </Formik>
           </CardBody>
         </Card>
-      }
+      )}
       {/* //! **************Welcome Section*************** */}
-      {props.dataLog.login.loggedInUser.role !== 'seo' &&
+      {props.dataLog.login.loggedInUser.role !== "seo" && (
         <Card className="welcome-section">
           <CardHeader>
             <CardTitle>Welcome Section</CardTitle>
@@ -895,7 +908,8 @@ const HomeForm = (props) => {
                                 id="title"
                                 onChange={handleWelcomeOnChange}
                                 value={
-                                  homeData?.widget_content?.welcomeSection?.title
+                                  homeData?.widget_content?.welcomeSection
+                                    ?.title
                                 }
                                 className={`form-control`}
                               />
@@ -930,14 +944,14 @@ const HomeForm = (props) => {
             </Formik>
           </CardBody>
         </Card>
-      }
+      )}
       {/* //! **************ُPromo Section*************** */}
       <Card className="welcome-section">
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <CardHeader>
             <CardTitle>Promo Section</CardTitle>
           </CardHeader>
-        }
+        )}
         <CardBody>
           <Formik
             initialValues={{
@@ -947,7 +961,7 @@ const HomeForm = (props) => {
           >
             {({ errors, touched }) => (
               <Form>
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" &&
                   homeData?.widget_content?.promoSection?.map((x, index) => (
                     <div className="variation-row-wrapper mb-2">
                       <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
@@ -964,7 +978,9 @@ const HomeForm = (props) => {
                                 <Field
                                   name="title"
                                   id="title"
-                                  onChange={(e) => handlePromoOnChange(e, index)}
+                                  onChange={(e) =>
+                                    handlePromoOnChange(e, index)
+                                  }
                                   value={x.images_detail?.title}
                                   className={`form-control`}
                                 />
@@ -1009,11 +1025,15 @@ const HomeForm = (props) => {
                                     <div className="img-preview-wrapper">
                                       {x.images_detail?.background_image !==
                                         "" && (
-                                          <img
-                                            src={x.images_detail.background_image}
-                                            alt=""
-                                          />
-                                        )}
+                                        <img
+                                          src={
+                                            process.env
+                                              .REACT_APP_IMAGE_BASE_URL +
+                                            x.images_detail.background_image
+                                          }
+                                          alt=""
+                                        />
+                                      )}
                                     </div>
                                     <Button.Ripple
                                       color="primary"
@@ -1047,7 +1067,7 @@ const HomeForm = (props) => {
                       </div>
                     </div>
                   ))}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Button.Ripple
                     onClick={addNewSection}
                     color="danger"
@@ -1057,7 +1077,7 @@ const HomeForm = (props) => {
                   >
                     Add New Section
                   </Button.Ripple>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>
@@ -1114,7 +1134,7 @@ const HomeForm = (props) => {
       //? ****************Arabic Version*************
       //! ***************************************** */}
       <div className="">
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <Card className="arabic-home-form">
             <CardHeader>
               <CardTitle>Arabic Slider Section</CardTitle>
@@ -1252,8 +1272,8 @@ const HomeForm = (props) => {
                                   id="title"
                                   onChange={handleArabicSliderThreeOnChange}
                                   value={
-                                    homeData?.widget_content?.arabic?.sliderThree
-                                      ?.title
+                                    homeData?.widget_content?.arabic
+                                      ?.sliderThree?.title
                                   }
                                   className={`form-control`}
                                 />
@@ -1290,9 +1310,9 @@ const HomeForm = (props) => {
               </Formik>
             </CardBody>
           </Card>
-        }
+        )}
         {/* //! **************Slider Bottom Section*************** */}
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <Card className="arabic-slider-bottom-section">
             <CardHeader>
               <CardTitle>Slider Bottom Section</CardTitle>
@@ -1344,7 +1364,9 @@ const HomeForm = (props) => {
                                           ?.tagSection?.description
                                       }
                                       onChange={(e) =>
-                                        handleArabicTagEditor(e.editor.getData())
+                                        handleArabicTagEditor(
+                                          e.editor.getData()
+                                        )
                                       }
                                     />
                                   </div>
@@ -1360,9 +1382,9 @@ const HomeForm = (props) => {
               </Formik>
             </CardBody>
           </Card>
-        }
+        )}
         {/* //! **************Welcome Section*************** */}
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <Card className="arabic-welcome-section">
             <CardHeader>
               <CardTitle>Welcome Section</CardTitle>
@@ -1432,14 +1454,14 @@ const HomeForm = (props) => {
               </Formik>
             </CardBody>
           </Card>
-        }
+        )}
         {/* //! **************ُPromo Section*************** */}
         <Card className="arabic-promo-section">
-          {props.dataLog.login.loggedInUser.role !== 'seo' &&
+          {props.dataLog.login.loggedInUser.role !== "seo" && (
             <CardHeader>
               <CardTitle>Promo Section</CardTitle>
             </CardHeader>
-          }
+          )}
           <CardBody>
             <Formik
               initialValues={{
@@ -1449,7 +1471,7 @@ const HomeForm = (props) => {
             >
               {({ errors, touched }) => (
                 <Form>
-                  {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                  {props.dataLog.login.loggedInUser.role !== "seo" &&
                     homeData?.widget_content?.arabic?.promoSection?.map(
                       (x, index) => (
                         <div className="variation-row-wrapper mb-2">
@@ -1460,7 +1482,9 @@ const HomeForm = (props) => {
                                   Promo {index + 1}
                                 </CardTitle>
                               </CardHeader>
-                              <UncontrolledCollapse toggler={`item-${index + 2}`}>
+                              <UncontrolledCollapse
+                                toggler={`item-${index + 2}`}
+                              >
                                 <CardBody>
                                   <FormGroup className="mb-1">
                                     <Label for="title">Title</Label>
@@ -1500,7 +1524,9 @@ const HomeForm = (props) => {
                                     >
                                       <DeleteOutlined
                                         color="secondary"
-                                        onClick={() => removeArabicSection(index)}
+                                        onClick={() =>
+                                          removeArabicSection(index)
+                                        }
                                       />
                                     </Col>
                                   </Row>
@@ -1511,7 +1537,7 @@ const HomeForm = (props) => {
                         </div>
                       )
                     )}
-                  {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                  {props.dataLog.login.loggedInUser.role !== "seo" && (
                     <Button.Ripple
                       onClick={addArabicNewSection}
                       color="danger"
@@ -1521,7 +1547,7 @@ const HomeForm = (props) => {
                     >
                       Add New Section
                     </Button.Ripple>
-                  }
+                  )}
                   <Card className="mt-3">
                     <CardHeader>
                       <CardTitle>Arabic Meta Tag Details</CardTitle>
@@ -1587,7 +1613,6 @@ const HomeForm = (props) => {
       </div>
     </>
   );
-}
+};
 // export default HomeForm;
 export default connect(mapStateToProps)(HomeForm);
-

@@ -23,7 +23,6 @@ import GalleryModal from "../gallery-modal/GalleryModal";
 import { DeleteOutlined } from "@material-ui/icons";
 import { connect } from "react-redux";
 
-
 const formSchema = Yup.object().shape({
   required: Yup.string().required("Required"),
 });
@@ -68,7 +67,6 @@ const mapStateToProps = (props) => {
   };
 };
 
-
 const FirstTimeFather = (props) => {
   const { id } = useParams();
   const [firstTimeFather, setFirstTimeFather] = useState({ ...initialObj });
@@ -98,12 +96,16 @@ const FirstTimeFather = (props) => {
   });
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleImageSelect = (e, index) => {
@@ -325,7 +327,7 @@ const FirstTimeFather = (props) => {
               <Form>
                 {/* //!--------------------------------------? */}
 
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" &&
                   firstTimeFather?.widget_content?.father?.map((x, index) => (
                     <div className="variation-row-wrapper mb-2" key={index}>
                       <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
@@ -390,7 +392,14 @@ const FirstTimeFather = (props) => {
                                     <div className="clearfix" />
                                     <div className="img-preview-wrapper">
                                       {x.featured_img !== "" && (
-                                        <img src={x.featured_img} alt="" />
+                                        <img
+                                          src={
+                                            process.env
+                                              .REACT_APP_IMAGE_BASE_URL +
+                                            x.featured_img
+                                          }
+                                          alt=""
+                                        />
                                       )}
                                     </div>
                                     <Button.Ripple
@@ -427,7 +436,7 @@ const FirstTimeFather = (props) => {
                       </div>
                     </div>
                   ))}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Button.Ripple
                     onClick={addVariation}
                     color="danger"
@@ -437,7 +446,7 @@ const FirstTimeFather = (props) => {
                   >
                     Add New Section
                   </Button.Ripple>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>
@@ -505,11 +514,11 @@ const FirstTimeFather = (props) => {
         //? ****************Abrabic Version************
        //! ******************************************** */}
       <Card className="arabic-father-form">
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <CardHeader>
             <CardTitle>Arabic First Time Father Form</CardTitle>
           </CardHeader>
-        }
+        )}
         <CardBody>
           <Formik
             initialValues={{
@@ -521,7 +530,7 @@ const FirstTimeFather = (props) => {
               <Form>
                 {/* //!--------------------------------------? */}
 
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" &&
                   firstTimeFather?.widget_content?.arabic?.father?.map(
                     (x, index) => (
                       <div className="variation-row-wrapper mb-2" key={index}>
@@ -576,7 +585,10 @@ const FirstTimeFather = (props) => {
 
                                 <Col sm={12}>
                                   <div
-                                    style={{ height: "100%", cursor: "pointer" }}
+                                    style={{
+                                      height: "100%",
+                                      cursor: "pointer",
+                                    }}
                                     className="d-flex align-items-center justify-content-end"
                                   >
                                     <DeleteOutlined
@@ -605,7 +617,7 @@ const FirstTimeFather = (props) => {
                 </div>
                 <br />
                 <br />
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Button.Ripple
                     onClick={addArabicSection}
                     color="danger"
@@ -615,7 +627,7 @@ const FirstTimeFather = (props) => {
                   >
                     Add New Section
                   </Button.Ripple>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Arabic Meta Tag Details</CardTitle>
@@ -686,4 +698,3 @@ const FirstTimeFather = (props) => {
 
 // export default FirstTimeFather;
 export default connect(mapStateToProps)(FirstTimeFather);
-

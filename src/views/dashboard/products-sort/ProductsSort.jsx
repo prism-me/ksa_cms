@@ -252,7 +252,7 @@ export default function ProductsSort() {
                                           }}
                                         >
                                           <img
-                                            src={x.featured_img}
+                                            src={process.env.REACT_APP_IMAGE_BASE_URL + x.featured_img}
                                             alt=""
                                             style={{
                                               width: "100%",

@@ -57,12 +57,16 @@ const PregnancyForm = (props) => {
   });
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleImageSelect = (e, index) => {
@@ -265,7 +269,7 @@ const PregnancyForm = (props) => {
     updatedBabycareData.widget_content = updatedData;
     setPregnancyData(updatedBabycareData);
   };
-  
+
   //!--------Handle First Trimester OnChange---------
   const handleFirstTrimesterOnChange = (value) => {
     let updatedValue = { ...pregnancyData };
@@ -304,7 +308,7 @@ const PregnancyForm = (props) => {
     let updatedData = updatedBabycareData.widget_content.arabic;
     updatedData.pregnancy[index][property] = value;
     updatedBabycareData.widget_content.arabic = updatedData;
- 
+
     setPregnancyData(updatedBabycareData);
   };
 
@@ -361,111 +365,120 @@ const PregnancyForm = (props) => {
           <Formik initialValues={{}} validationSchema={formSchema}>
             {({ errors, touched }) => (
               <Form>
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="mb-2">
                     <div className="clearfix mb-1" />
-                    {pregnancyData.widget_content?.pregnancy?.map((x, index) => (
-                      <div className="variation-row-wrapper mb-2" key={index}>
-                        <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
-                          <Card>
-                            <CardHeader
-                              id={`item-${index}`}
-                              className="accordion-header"
-                            >
-                              <CardTitle className="lead collapse-title collapsed">
-                                {x.tabName}
-                              </CardTitle>
-                            </CardHeader>
-                            <UncontrolledCollapse toggler={`item-${index}`}>
-                              <CardBody>
-                                <Row>
-                                  <Col sm={4}>
-                                    <FormGroup className="">
-                                      <Label for="featured_img">
-                                        Featured Image
-                                      </Label>
-                                      <div className="clearfix" />
-                                      <div className="img-preview-wrapper">
-                                        {x.featured_img !== "" && (
-                                          <img src={x.featured_img} alt="" />
-                                        )}
+                    {pregnancyData.widget_content?.pregnancy?.map(
+                      (x, index) => (
+                        <div className="variation-row-wrapper mb-2" key={index}>
+                          <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
+                            <Card>
+                              <CardHeader
+                                id={`item-${index}`}
+                                className="accordion-header"
+                              >
+                                <CardTitle className="lead collapse-title collapsed">
+                                  {x.tabName}
+                                </CardTitle>
+                              </CardHeader>
+                              <UncontrolledCollapse toggler={`item-${index}`}>
+                                <CardBody>
+                                  <Row>
+                                    <Col sm={4}>
+                                      <FormGroup className="">
+                                        <Label for="featured_img">
+                                          Featured Image
+                                        </Label>
+                                        <div className="clearfix" />
+                                        <div className="img-preview-wrapper">
+                                          {x.featured_img !== "" && (
+                                            <img
+                                              src={
+                                                process.env
+                                                  .REACT_APP_IMAGE_BASE_URL +
+                                                x.featured_img
+                                              }
+                                              alt=""
+                                            />
+                                          )}
+                                        </div>
+                                        <Button.Ripple
+                                          color="primary"
+                                          className="p-1"
+                                          onClick={() => {
+                                            setIsSingle(true);
+                                            setCurrentIndex(index);
+                                            setModalShow(true);
+                                          }}
+                                        >
+                                          Add Featured Image
+                                        </Button.Ripple>
+                                      </FormGroup>
+                                    </Col>
+                                    <Col sm={12}>
+                                      <div>
+                                        <Label for="bodyText">Your Body</Label>
+                                        <CKEditor
+                                          onBeforeLoad={(CKEDITOR) =>
+                                            (CKEDITOR.disableAutoInline = true)
+                                          }
+                                          data={x.bodyText}
+                                          onChange={(e) =>
+                                            handleBabyFeedingChange(
+                                              e.editor.getData(),
+                                              index,
+                                              "bodyText"
+                                            )
+                                          }
+                                        />
                                       </div>
-                                      <Button.Ripple
-                                        color="primary"
-                                        className="p-1"
-                                        onClick={() => {
-                                          setIsSingle(true);
-                                          setCurrentIndex(index);
-                                          setModalShow(true);
-                                        }}
-                                      >
-                                        Add Featured Image
-                                      </Button.Ripple>
-                                    </FormGroup>
-                                  </Col>
-                                  <Col sm={12}>
-                                    <div>
-                                      <Label for="bodyText">Your Body</Label>
-                                      <CKEditor
-                                        onBeforeLoad={(CKEDITOR) =>
-                                          (CKEDITOR.disableAutoInline = true)
-                                        }
-                                        data={x.bodyText}
-                                        onChange={(e) =>
-                                          handleBabyFeedingChange(
-                                            e.editor.getData(),
-                                            index,
-                                            "bodyText"
-                                          )
-                                        }
-                                      />
-                                    </div>
-                                    <div>
-                                      <Label for="infoText">
-                                        Your Information
-                                      </Label>
-                                      <CKEditor
-                                        onBeforeLoad={(CKEDITOR) =>
-                                          (CKEDITOR.disableAutoInline = true)
-                                        }
-                                        data={x.infoText}
-                                        onChange={(e) =>
-                                          handleBabyFeedingChange(
-                                            e.editor.getData(),
-                                            index,
-                                            "infoText"
-                                          )
-                                        }
-                                      />
-                                    </div>
-                                    <div>
-                                      <Label for="babyText">Your Baby</Label>
-                                      <CKEditor
-                                        onBeforeLoad={(CKEDITOR) =>
-                                          (CKEDITOR.disableAutoInline = true)
-                                        }
-                                        data={x.babyText}
-                                        onChange={(e) =>
-                                          handleBabyFeedingChange(
-                                            e.editor.getData(),
-                                            index,
-                                            "babyText"
-                                          )
-                                        }
-                                      />
-                                    </div>
-                                  </Col>
-                                </Row>
-                              </CardBody>
-                            </UncontrolledCollapse>
-                          </Card>
+                                      <div>
+                                        <Label for="infoText">
+                                          Your Information
+                                        </Label>
+                                        <CKEditor
+                                          onBeforeLoad={(CKEDITOR) =>
+                                            (CKEDITOR.disableAutoInline = true)
+                                          }
+                                          data={x.infoText}
+                                          onChange={(e) =>
+                                            handleBabyFeedingChange(
+                                              e.editor.getData(),
+                                              index,
+                                              "infoText"
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                      <div>
+                                        <Label for="babyText">Your Baby</Label>
+                                        <CKEditor
+                                          onBeforeLoad={(CKEDITOR) =>
+                                            (CKEDITOR.disableAutoInline = true)
+                                          }
+                                          data={x.babyText}
+                                          onChange={(e) =>
+                                            handleBabyFeedingChange(
+                                              e.editor.getData(),
+                                              index,
+                                              "babyText"
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                </CardBody>
+                              </UncontrolledCollapse>
+                            </Card>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
-                }
+                )}
                 {/* //! *****************Trimester******************* */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Card>
                     <CardHeader>
                       <CardTitle>Trimesters</CardTitle>
@@ -475,7 +488,10 @@ const PregnancyForm = (props) => {
                       <div className="variation-row-wrapper mb-2">
                         <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                           <Card>
-                            <CardHeader id="item-50" className="accordion-header">
+                            <CardHeader
+                              id="item-50"
+                              className="accordion-header"
+                            >
                               <CardTitle className="lead collapse-title collapsed">
                                 First Trimester
                               </CardTitle>
@@ -509,14 +525,16 @@ const PregnancyForm = (props) => {
                                       <div className="img-preview-wrapper">
                                         {pregnancyData?.widget_content
                                           ?.firstTrimester?.image !== "" && (
-                                            <img
-                                              src={
-                                                pregnancyData?.widget_content
-                                                  ?.firstTrimester?.image
-                                              }
-                                              alt=""
-                                            />
-                                          )}
+                                          <img
+                                            src={
+                                              process.env
+                                                .REACT_APP_IMAGE_BASE_URL +
+                                              pregnancyData?.widget_content
+                                                ?.firstTrimester?.image
+                                            }
+                                            alt=""
+                                          />
+                                        )}
                                       </div>
                                       <Button.Ripple
                                         color="primary"
@@ -541,7 +559,10 @@ const PregnancyForm = (props) => {
                       <div className="variation-row-wrapper mb-2">
                         <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                           <Card>
-                            <CardHeader id="item-51" className="accordion-header">
+                            <CardHeader
+                              id="item-51"
+                              className="accordion-header"
+                            >
                               <CardTitle className="lead collapse-title collapsed">
                                 Second Trimester
                               </CardTitle>
@@ -575,14 +596,16 @@ const PregnancyForm = (props) => {
                                       <div className="img-preview-wrapper">
                                         {pregnancyData?.widget_content
                                           ?.secondTrimester?.image !== "" && (
-                                            <img
-                                              src={
-                                                pregnancyData?.widget_content
-                                                  ?.secondTrimester?.image
-                                              }
-                                              alt=""
-                                            />
-                                          )}
+                                          <img
+                                            src={
+                                              process.env
+                                                .REACT_APP_IMAGE_BASE_URL +
+                                              pregnancyData?.widget_content
+                                                ?.secondTrimester?.image
+                                            }
+                                            alt=""
+                                          />
+                                        )}
                                       </div>
                                       <Button.Ripple
                                         color="primary"
@@ -608,7 +631,10 @@ const PregnancyForm = (props) => {
                       <div className="variation-row-wrapper mb-2">
                         <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                           <Card>
-                            <CardHeader id="item-52" className="accordion-header">
+                            <CardHeader
+                              id="item-52"
+                              className="accordion-header"
+                            >
                               <CardTitle className="lead collapse-title collapsed">
                                 Third Trimester
                               </CardTitle>
@@ -642,14 +668,16 @@ const PregnancyForm = (props) => {
                                       <div className="img-preview-wrapper">
                                         {pregnancyData?.widget_content
                                           ?.secondTrimester?.image !== "" && (
-                                            <img
-                                              src={
-                                                pregnancyData?.widget_content
-                                                  ?.thirdTrimester?.image
-                                              }
-                                              alt=""
-                                            />
-                                          )}
+                                          <img
+                                            src={
+                                              process.env
+                                                .REACT_APP_IMAGE_BASE_URL +
+                                              pregnancyData?.widget_content
+                                                ?.thirdTrimester?.image
+                                            }
+                                            alt=""
+                                          />
+                                        )}
                                       </div>
                                       <Button.Ripple
                                         color="primary"
@@ -674,7 +702,7 @@ const PregnancyForm = (props) => {
                       </div>
                     </CardBody>
                   </Card>
-                }
+                )}
 
                 {/* //! **********Meta Details************** */}
                 <Card className="mt-3">
@@ -744,16 +772,16 @@ const PregnancyForm = (props) => {
       //? ***************Arabic Version*****************
       //! ***********************************************/}
       <Card className="arabic-pregnancy-form">
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <CardHeader>
             <CardTitle>Pregnancy Form</CardTitle>
           </CardHeader>
-        }
+        )}
         <CardBody>
           <Formik initialValues={{}} validationSchema={formSchema}>
             {({ errors, touched }) => (
               <Form>
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="mb-2">
                     <div className="clearfix mb-1" />
                     {pregnancyData.widget_content.arabic.pregnancy?.map(
@@ -833,9 +861,9 @@ const PregnancyForm = (props) => {
                       )
                     )}
                   </div>
-                }
+                )}
                 {/* //! *****************Arabic Trimesters******************* */}
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Card>
                     <CardHeader>
                       <CardTitle>Trimesters</CardTitle>
@@ -845,7 +873,10 @@ const PregnancyForm = (props) => {
                       <div className="variation-row-wrapper mb-2">
                         <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                           <Card>
-                            <CardHeader id="item-53" className="accordion-header">
+                            <CardHeader
+                              id="item-53"
+                              className="accordion-header"
+                            >
                               <CardTitle className="lead collapse-title collapsed">
                                 First Trimester
                               </CardTitle>
@@ -882,7 +913,10 @@ const PregnancyForm = (props) => {
                       <div className="variation-row-wrapper mb-2">
                         <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                           <Card>
-                            <CardHeader id="item-54" className="accordion-header">
+                            <CardHeader
+                              id="item-54"
+                              className="accordion-header"
+                            >
                               <CardTitle className="lead collapse-title collapsed">
                                 Second Trimester
                               </CardTitle>
@@ -919,7 +953,10 @@ const PregnancyForm = (props) => {
                       <div className="variation-row-wrapper mb-2">
                         <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                           <Card>
-                            <CardHeader id="item-52" className="accordion-header">
+                            <CardHeader
+                              id="item-52"
+                              className="accordion-header"
+                            >
                               <CardTitle className="lead collapse-title collapsed">
                                 Third Trimester
                               </CardTitle>
@@ -954,7 +991,7 @@ const PregnancyForm = (props) => {
                       </div>
                     </CardBody>
                   </Card>
-                }
+                )}
                 {/* //! **************Arabic Meta Details************** */}
                 <Card className="mt-3">
                   <CardHeader>
@@ -1028,7 +1065,6 @@ const PregnancyForm = (props) => {
 
 // export default PregnancyForm;
 export default connect(mapStateToProps)(PregnancyForm);
-
 
 const initialObj = {
   widget_name: "pregnancy",

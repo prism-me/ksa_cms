@@ -54,7 +54,7 @@ export default class CategoryList extends Component {
                 className="img-fluid rounded-circle"
                 height="36"
                 width="36"
-                src={row.featured_img}
+                src={process.env.REACT_APP_IMAGE_BASE_URL + row.featured_img}
                 alt={row.name}
               />
             </div>
@@ -115,7 +115,6 @@ export default class CategoryList extends Component {
   };
   //!--------Handle Delete---------
   handleDelete = (route) => {
-    
     API.delete(`/categories/${route}`)
       .then((response) => {
         if (response.status === 200 || response.status === 201) {

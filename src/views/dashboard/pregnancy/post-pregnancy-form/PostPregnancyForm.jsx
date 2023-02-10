@@ -91,7 +91,6 @@ const mapStateToProps = (props) => {
   };
 };
 
-
 const PostPregnancy = (props) => {
   const { id } = useParams();
   const [postPregnancy, setPostPregnancy] = useState(initialObj);
@@ -123,12 +122,16 @@ const PostPregnancy = (props) => {
   });
 
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   //!-------handleSelect s3 Images-----------
@@ -349,7 +352,7 @@ const PostPregnancy = (props) => {
           >
             {({ errors, touched }) => (
               <Form>
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Card className="inner-card-wrap">
                     <CardHeader>
                       <CardTitle>First Section</CardTitle>
@@ -395,11 +398,14 @@ const PostPregnancy = (props) => {
                             <div className="img-preview-wrapper">
                               {postPregnancy.widget_content.featured_img !==
                                 "" && (
-                                  <img
-                                    src={postPregnancy.widget_content.featured_img}
-                                    alt=""
-                                  />
-                                )}
+                                <img
+                                  src={
+                                    process.env.REACT_APP_IMAGE_BASE_URL +
+                                    postPregnancy.widget_content.featured_img
+                                  }
+                                  alt=""
+                                />
+                              )}
                             </div>
                             <Button.Ripple
                               color="primary"
@@ -420,15 +426,18 @@ const PostPregnancy = (props) => {
                         {selectedImages?.map((x, index) => (
                           <Col sm={3} key={index}>
                             <div className="img-preview-wrapper preview-small">
-                              <img src={x} alt="" />
+                              <img
+                                src={process.env.REACT_APP_IMAGE_BASE_URL + x}
+                                alt=""
+                              />
                             </div>
                           </Col>
                         ))}
                       </Row>
                     </CardBody>
                   </Card>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Card>
                     <CardHeader>
                       <CardTitle>Second Section</CardTitle>
@@ -436,7 +445,10 @@ const PostPregnancy = (props) => {
                     <CardBody>
                       {postPregnancy?.widget_content?.pregnancy?.map(
                         (x, index) => (
-                          <div className="variation-row-wrapper mb-2" key={index}>
+                          <div
+                            className="variation-row-wrapper mb-2"
+                            key={index}
+                          >
                             <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                               <Card>
                                 <CardHeader
@@ -492,7 +504,14 @@ const PostPregnancy = (props) => {
                                           <div className="clearfix" />
                                           <div className="img-preview-wrapper">
                                             {x.featured_img !== "" && (
-                                              <img src={x.featured_img} alt="" />
+                                              <img
+                                                src={
+                                                  process.env
+                                                    .REACT_APP_IMAGE_BASE_URL +
+                                                  x.featured_img
+                                                }
+                                                alt=""
+                                              />
                                             )}
                                           </div>
                                           <Button.Ripple
@@ -519,7 +538,7 @@ const PostPregnancy = (props) => {
                       )}
                     </CardBody>
                   </Card>
-                }
+                )}
                 <div className="submit-btn-wrap">
                   <Button.Ripple
                     onClick={handleSubmit}
@@ -598,11 +617,11 @@ const PostPregnancy = (props) => {
       //! ************************************************** */}
 
       <Card className="arabic-postPregnancy-form">
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <CardHeader>
             <CardTitle>Arabic Post Pregnancy Form</CardTitle>
           </CardHeader>
-        }
+        )}
         <CardBody>
           <Formik
             initialValues={{
@@ -612,7 +631,7 @@ const PostPregnancy = (props) => {
           >
             {({ errors, touched }) => (
               <Form>
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Card className="inner-card-wrap">
                     <CardHeader>
                       <CardTitle>First Section</CardTitle>
@@ -649,8 +668,8 @@ const PostPregnancy = (props) => {
                       </Row>
                     </CardBody>
                   </Card>
-                }
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                )}
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <Card>
                     <CardHeader>
                       <CardTitle>Second Section</CardTitle>
@@ -658,7 +677,10 @@ const PostPregnancy = (props) => {
                     <CardBody>
                       {postPregnancy?.widget_content?.arabic?.pregnancy?.map(
                         (x, index) => (
-                          <div className="variation-row-wrapper mb-2" key={index}>
+                          <div
+                            className="variation-row-wrapper mb-2"
+                            key={index}
+                          >
                             <div className="vx-collapse collapse-bordered collapse-icon accordion-icon-rotate">
                               <Card>
                                 <CardHeader
@@ -716,7 +738,7 @@ const PostPregnancy = (props) => {
                       )}
                     </CardBody>
                   </Card>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>
@@ -797,4 +819,3 @@ const PostPregnancy = (props) => {
 
 // export default PostPregnancy;
 export default connect(mapStateToProps)(PostPregnancy);
-

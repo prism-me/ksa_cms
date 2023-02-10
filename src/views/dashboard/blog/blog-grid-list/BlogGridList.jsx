@@ -53,7 +53,7 @@ class BlogGridList extends React.Component {
                   className="img-fluid rounded-circle"
                   height="36"
                   width="36"
-                  src={row.featured_img}
+                  src={process.env.REACT_APP_IMAGE_BASE_URL + row.featured_img}
                   alt={row.featured_img}
                 />
               ) : null}
@@ -90,7 +90,9 @@ class BlogGridList extends React.Component {
                 color: "#e65550 ",
               }}
               onClick={() =>
-                this.props.history.push(`/blog/form/${encodeURIComponent(row.route)}`)
+                this.props.history.push(
+                  `/blog/form/${encodeURIComponent(row.route)}`
+                )
               }
               className="action-icon-edit"
             />

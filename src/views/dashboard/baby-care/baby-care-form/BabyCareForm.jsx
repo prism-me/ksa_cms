@@ -214,7 +214,6 @@ const mapStateToProps = (props) => {
   };
 };
 
-
 const BabyCareForm = (props) => {
   const [babycareData, setBabycareData] = useState({ ...initialObj });
   const [pageData, setPageData] = useState();
@@ -231,7 +230,7 @@ const BabyCareForm = (props) => {
   });
 
   useEffect(() => {
-    getGalleryImages()
+    getGalleryImages();
   }, []);
   //!--------------CALL Pages Api-------------
   useEffect(() => {
@@ -304,14 +303,17 @@ const BabyCareForm = (props) => {
       .catch((err) => console.log(err));
   }, []);
 
-  
   const getGalleryImages = () => {
-    API.get(`/uploads`).then((response) => {
-    // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
+    API.get(`/uploads`)
+      .then((response) => {
+        // axios.get(`https://pigeonarabia.com/E_Commerce_APis_v2/public/api/uploads`).then((response) => {
         if (response.status === 200) {
-            setImagesData(response.data?.map((x) => ({ ...x, isChecked: false })));
+          setImagesData(
+            response.data?.map((x) => ({ ...x, isChecked: false }))
+          );
         }
-    }).catch(err => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleImageSelect = (e, index) => {
@@ -406,7 +408,7 @@ const BabyCareForm = (props) => {
           <Formik initialValues={{}} validationSchema={formSchema}>
             {({ errors, touched }) => (
               <Form>
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="mb-2">
                     <div className="clearfix mb-1" />
                     <div className="variation-row-wrapper mb-2">
@@ -438,11 +440,14 @@ const BabyCareForm = (props) => {
                             <div className="img-preview-wrapper">
                               {babycareData?.widget_content?.featured_img !==
                                 "" && (
-                                  <img
-                                    src={babycareData?.widget_content?.featured_img}
-                                    alt=""
-                                  />
-                                )}
+                                <img
+                                  src={
+                                    process.env.REACT_APP_IMAGE_BASE_URL +
+                                    babycareData?.widget_content?.featured_img
+                                  }
+                                  alt=""
+                                />
+                              )}
                             </div>
                             <Button.Ripple
                               color="primary"
@@ -513,7 +518,9 @@ const BabyCareForm = (props) => {
                                       />
                                     </div>
                                     <div>
-                                      <Label for="caringText">Baby Caring</Label>
+                                      <Label for="caringText">
+                                        Baby Caring
+                                      </Label>
                                       <CKEditor
                                         onBeforeLoad={(CKEDITOR) =>
                                           (CKEDITOR.disableAutoInline = true)
@@ -537,7 +544,7 @@ const BabyCareForm = (props) => {
                       </div>
                     ))}
                   </div>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Meta Tag Details</CardTitle>
@@ -605,16 +612,16 @@ const BabyCareForm = (props) => {
       //? ******************Arabic Version*****************
       //! ************************************************** */}
       <Card className="arabic-babycare-form-card">
-        {props.dataLog.login.loggedInUser.role !== 'seo' &&
+        {props.dataLog.login.loggedInUser.role !== "seo" && (
           <CardHeader>
             <CardTitle>Arabic Baby Care Form</CardTitle>
           </CardHeader>
-        }
+        )}
         <CardBody>
           <Formik initialValues={{}} validationSchema={formSchema}>
             {({ errors, touched }) => (
               <Form>
-                {props.dataLog.login.loggedInUser.role !== 'seo' &&
+                {props.dataLog.login.loggedInUser.role !== "seo" && (
                   <div className="mb-2">
                     <div className="clearfix mb-1" />
                     <div className="variation-row-wrapper mb-2">
@@ -729,7 +736,7 @@ const BabyCareForm = (props) => {
                       )
                     )}
                   </div>
-                }
+                )}
                 <Card className="mt-3">
                   <CardHeader>
                     <CardTitle>Arabic Meta Tag Details</CardTitle>
@@ -802,4 +809,3 @@ const BabyCareForm = (props) => {
 
 // export default BabyCareForm;
 export default connect(mapStateToProps)(BabyCareForm);
-

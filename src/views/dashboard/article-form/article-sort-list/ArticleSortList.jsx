@@ -139,7 +139,7 @@ class ArticleSortList extends React.Component {
                                                         <td>
                                                             <img
                                                                 className="img-fluid"
-                                                                src={item?.featured_img}
+                                                                src={process.env.REACT_APP_IMAGE_BASE_URL + item?.featured_img}
                                                                 alt={""}
                                                                 width="75px"
                                                             />
